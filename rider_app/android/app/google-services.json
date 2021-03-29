@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "404005014601",
+    "project_id": "yatra-9b8fa",
+    "storage_bucket": "yatra-9b8fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404005014601:android:3edb801148af52d9ac0398",
+        "android_client_info": {
+          "package_name": "com.example.riderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404005014601-msu0ihd4jv9cnq7uk0ctdbd5lr0c02el.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq2VipXviy3jvfa_4ZNvrcJJ1muIdTv7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404005014601-msu0ihd4jv9cnq7uk0ctdbd5lr0c02el.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

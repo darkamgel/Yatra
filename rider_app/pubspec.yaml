@@ -31,6 +31,7 @@ dependencies:
   firebase_core:
   firebase_auth:
   firebase_database:
+  fluttertoast:
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,13 @@ flutter:
      - family: Brand-Bold
        fonts:
           - asset: fonts/bolt-semibold.ttf
+     - family: Trainone
+       fonts:
+          - asset: fonts/TrainOne-Regular.ttf
+     - family: cursive
+       fonts:
+          - asset: fonts/Pacifico-Regular.ttf
+
 
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic

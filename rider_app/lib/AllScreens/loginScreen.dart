@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rider_app/AllScreens/registrationScreen.dart';
 
 class LoginScreen extends StatelessWidget {
+
+  static const String idscreen = "login";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +21,7 @@ class LoginScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Image(
                   image: AssetImage("images/yatra_logo.png"),
-                  width: 390.0,
+                  width: 400.0,
                   height: 250.0,
                   alignment: Alignment.center,
                 ),
@@ -29,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Text(
                   "Login as Rider",
-                  style: TextStyle(fontSize: 24.0, fontFamily: "Brand-Bold"),
+                  style: TextStyle(fontSize: 32.0, fontFamily: "Brand-Bold"),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -46,7 +50,7 @@ class LoginScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: "Email",
                         labelStyle: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                         ),
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 10.0),
                       ),
@@ -61,7 +65,7 @@ class LoginScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: "Password",
                         labelStyle: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                         ),
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 10.0),
                       ),
@@ -99,10 +103,15 @@ class LoginScreen extends StatelessWidget {
               ),
               FlatButton(
                   onPressed: (){
-                    print("shit");
+                    Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        RegisterationScreen.idscreen, (route) => false);
                   },
                   child: Text(
-                    "Do not have an Account ? Register Here"
+                    "Do not have an Account ? Register Here",
+                    style: TextStyle(
+                      fontSize: 16
+                    ),
                   )),
             ],
           ),

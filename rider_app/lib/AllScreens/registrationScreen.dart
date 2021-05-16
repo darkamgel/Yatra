@@ -1,25 +1,42 @@
+import 'dart:async';
+
+
+
+
+
+import 'package:email_auth/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rider_app/AllScreens/loginScreen.dart';
 import 'package:rider_app/AllScreens/mainscreen.dart';
+import 'package:rider_app/AllScreens/verifyscreen.dart';
+import 'package:rider_app/AllWidgets/progressDialog.dart';
 import 'package:rider_app/main.dart';
 
 class RegisterationScreen extends StatelessWidget {
   static const String idscreen = "register";
+  Timer timer;
+  User user;
 
   TextEditingController nameTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController phoneTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: 690,
+          margin: EdgeInsets.all(0.0),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/background.png'),
+                colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
+                fit: BoxFit.cover,
+              )),
           child: Column(
             children: [
               SizedBox(
@@ -27,11 +44,14 @@ class RegisterationScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Image(
-                  image: AssetImage("images/yatra_logo.png"),
-                  width: 400.0,
-                  height: 250.0,
-                  alignment: Alignment.center,
+                child: Hero(
+                  tag: 'logo',
+                  child: Image(
+                    image: AssetImage("images/yatra_logo.png"),
+                    width: 400.0,
+                    height: 250.0,
+                    alignment: Alignment.center,
+                  ),
                 ),
               ),
               SizedBox(
@@ -41,7 +61,7 @@ class RegisterationScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Text(
                   "Register as Rider",
-                  style: TextStyle(fontSize: 32.0, fontFamily: "Brand-Bold"),
+                  style: TextStyle(color: Colors.white,fontSize: 32.0, fontFamily: "Brand-Bold",letterSpacing: 3),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -56,50 +76,122 @@ class RegisterationScreen extends StatelessWidget {
                       controller: nameTextEditingController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.person,color: Colors.white,size: 30,),
+                        fillColor: Colors.grey[500].withOpacity(0.5),
+                        filled: true,
+
+                        //paxi add gareko
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 2.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        ///yeta samma
+
+
+
                         labelText: "UserName",
                         labelStyle: TextStyle(
-                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontSize: 16.0
+
+                          ,
                         ),
                         hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 10.0),
                       ),
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 20.0,color: Colors.white),
                     ),
 
                     //for entering your mail
 
                     SizedBox(
-                      height: 1.0,
+                      height: 10.0,
                     ),
                     TextField(
                       controller: emailTextEditingController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.email,color: Colors.white,size: 30,),
+                        fillColor: Colors.grey[500].withOpacity(0.5),
+                        filled: true,
+
+                        //paxi add gareko
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 2.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        ///yeta samma
+
+
+
+
                         labelText: "Email",
                         labelStyle: TextStyle(
+                          color: Colors.white,
                           fontSize: 16.0,
                         ),
                         hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 10.0),
                       ),
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 20.0,color: Colors.white),
                     ),
 
                     SizedBox(
-                      height: 1.0,
+                      height: 10.0,
                     ),
                     TextField(
                       controller: phoneTextEditingController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.contact_phone,color: Colors.white,size: 30,),
+                        fillColor: Colors.grey[500].withOpacity(0.5),
+                        filled: true,
+
+                        //paxi add gareko
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 2.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        ///yeta samma
+
+
+
                         labelText: "Phone",
                         labelStyle: TextStyle(
+                          color: Colors.white,
                           fontSize: 16.0,
                         ),
                         hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 10.0),
                       ),
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 20.0,color: Colors.white),
                     ),
                     //for entering password
                     SizedBox(
@@ -109,66 +201,112 @@ class RegisterationScreen extends StatelessWidget {
                       controller: passwordTextEditingController,
                       obscureText: true,
                       decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock_outline,color: Colors.white,size: 30,),
+                        fillColor: Colors.grey[500].withOpacity(0.5),
+                        filled: true,
+
+                        //paxi add gareko
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide( width: 2.0),
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                        ),
+                        ///yeta samma
+
+
                         labelText: "Password",
                         labelStyle: TextStyle(
+                          color: Colors.white,
                           fontSize: 16.0,
                         ),
                         hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 10.0),
                       ),
-                      style: TextStyle(fontSize: 14.0),
+                      style: TextStyle(fontSize: 20.0,color: Colors.white),
                     ),
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     SizedBox(
                       height: 10.0,
                     ),
 
                     RaisedButton(
-                        color: Colors.yellow,
-                        textColor: Colors.blue,
+                        color: Colors.grey[500].withOpacity(0.5),
+                        textColor: Colors.white,
                         child: Container(
                           height: 50.0,
+                          width: 150,
                           child: Center(
                             child: Text(
                               "SignIn",
                               style: TextStyle(
-                                fontSize: 18.0,
+                                fontSize: 20.0,
+                                letterSpacing: 3,
                                 fontFamily: "Brand-Bold",
                               ),
                             ),
                           ),
                         ),
                         shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(24.0),
+                          borderRadius: new BorderRadius.circular(14.0),
                         ),
-                        onPressed: () {
+                        onPressed: () async{
+
                           if (nameTextEditingController.text.length < 4) {
                              displayToastMessage(
-                                 "Username Must be atleast 3 characters",
+                                 "Username Must be atleast 4 characters",
                                  context);
                           } else if (!emailTextEditingController.text
                               .contains("@")) {
                             displayToastMessage("Email is not Valid ", context);
-                          } else if (phoneTextEditingController.text.isEmpty) {
+                          } else if ((phoneTextEditingController.text.length <10 )) {
                             displayToastMessage(
-                                "Phone number is mandatory", context);
+                                "Invalid Phone number  ", context);
                           } else if (passwordTextEditingController.text.length <
                               7) {
                             displayToastMessage(
                                 "Password must be 6 characters long", context);
                           } else {
+
                             registerNewUser(context);
+                            
                           }
+
+
+
+
+
                         }),
                   ],
                 ),
               ),
               FlatButton(
                   onPressed: () {
+
                     Navigator.pushNamedAndRemoveUntil(
                         context, LoginScreen.idscreen, (route) => false);
                   },
-                  child: Text("Already have an Account ? Login Here",style: TextStyle(fontSize: 16),)),
+                  child: Text("Already have an Account ? Login Here",style: TextStyle(fontSize: 17,color: Colors.white),)),
             ],
           ),
         ),
@@ -179,20 +317,38 @@ class RegisterationScreen extends StatelessWidget {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   void registerNewUser(BuildContext context) async {
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context)
+        {
+          return ProgressDialog(message: "Signining In , please wait....",);
+        });
+
+
+
+
+
     final User firebaseUser = (await _firebaseAuth
             .createUserWithEmailAndPassword(
                 email: emailTextEditingController.text,
                 password: passwordTextEditingController.text)
-            .catchError((errMsg){
+        .catchError((errMsg){
+              Navigator.pop(context);
               displayToastMessage("Error:"+errMsg.toString(), context);
 
-    }))
+
+
+    })
+    )
         .user;
+     await _firebaseAuth.currentUser.sendEmailVerification();
+
+
 
     if (firebaseUser != null) //user has been created
     {
-      //saving user data to database
-
 
       Map userDataMap = {
         "name": nameTextEditingController.text.trim(),
@@ -201,17 +357,35 @@ class RegisterationScreen extends StatelessWidget {
       };
 
       usersRef.child(firebaseUser.uid).set(userDataMap);
-      displayToastMessage("Welcome to Yatra. Book ride as you like", context);
 
-      Navigator.pushNamedAndRemoveUntil(
-          context, MainScreen.idscreen, (route) => false);
+
+       // await firebaseUser.sendEmailVerification();
+
+
+
+
+       // if(user.emailVerified){
+         Navigator.pushNamedAndRemoveUntil(
+              context, MainScreen.idscreen, (route) => false);
+       //
+         displayToastMessage("Welcome to Yatra. Book ride as you like", context);
+       //
+       // }
+
+      // await handleUserEmailVerification(context, user: firebaseUser);
+      
+
+
 
     } else {
+      Navigator.pop(context);
       //if error display messages
       displayToastMessage("UserAccount hasn't been Created", context);
 
     }
   }
+
+
 }
 
 displayToastMessage(String message, BuildContext context)

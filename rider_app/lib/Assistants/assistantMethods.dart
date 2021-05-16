@@ -13,7 +13,7 @@ class AssistantMethods {
     String placeAddress = "";
     String st1, st2, st3, st4;
     String url =
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyBq2VipXviy3jvfa_4ZNvrcJJ1muIdTv7U";
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=use your key";
 
     var response = await RequestAssistant.getRequest(url);
 

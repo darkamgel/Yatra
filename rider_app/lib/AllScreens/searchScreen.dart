@@ -281,7 +281,11 @@ class PredictionTile extends StatelessWidget {
     String placeDetailsurl="https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey";
 
     var res = await RequestAssistant.getRequest(placeDetailsurl);
-    
+
+
+
+    ///********************************************THis is for searching place i.e place api*****************************///
+
     Navigator.pop(context);
     if(res == "failed"){
       return;

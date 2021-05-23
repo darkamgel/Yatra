@@ -1,19 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rider_app/%20DataHandler/appData.dart';
 import 'package:rider_app/Assistants/resquestAssitant.dart';
 import 'package:rider_app/Models/address.dart';
+import 'package:rider_app/Models/allUsers.dart';
 import 'package:rider_app/Models/directionDetails.dart';
 import 'package:rider_app/configMaps.dart';
 
 class AssistantMethods {
+
+  ///**************************************afno location dine wala **************************************///
+
   static Future<String> searchCoordinateAddress(
       Position position, context) async {
     String placeAddress = "";
     String st1, st2, st3, st4;
     String url =
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=use your key";
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyBq2VipXviy3jvfa_4ZNvrcJJ1muIdTv7U";
 
     var response = await RequestAssistant.getRequest(url);
 
@@ -41,6 +47,9 @@ class AssistantMethods {
     return placeAddress;
   }
 
+
+  //*************************************Direction api used *****************************************//
+
   static Future<DirectionDetails> obtainDirectionDetails(LatLng initialPosition ,LatLng finalPosition)async{
     String directionUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=${initialPosition.latitude},${initialPosition.longitude}&destination=${finalPosition.latitude},${finalPosition.longitude} &key=$mapKey";
 
@@ -67,5 +76,45 @@ class AssistantMethods {
 
 
   }
+
+  //**********************************fare calculation per km ****************************//
+
+  static int calculatefares(DirectionDetails directionDetails){
+    //interms of USD//for each minute we are charging $.20
+    double timeTraveledfare = (directionDetails.durationValue/60) * 0.10;
+    //per km $.20
+    double distanceTraveledfare = (directionDetails.distanceValue/1000) * 0.10;
+
+    double totalFareAmount = timeTraveledfare + distanceTraveledfare;
+
+
+    //1$ = 120
+
+   double totalLocalAmount =  totalFareAmount * 120;
+
+   return totalLocalAmount.truncate();
+
+  }
+
+  //getting current user inforamtion
+
+  static void getCureentOnlineUserInfo() async{
+    firebaseUser = await FirebaseAuth.instance.currentUser;
+    String userId = firebaseUser.uid;
+
+    DatabaseReference reference = 
+    FirebaseDatabase.instance.reference().child("users").child(userId);
+
+
+
+    reference.once().then((DataSnapshot dataSnapshot){
+      if(dataSnapshot.value!=null){
+        userCurrentInfo = Users.fromSnapshot(dataSnapshot);
+
+      }
+    });
+
+  }
+
 
 }

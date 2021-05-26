@@ -5,7 +5,7 @@ import 'package:driver_app/Models/allUsers.dart';
 
 String mapKey = "your key";
 
-
 User firebaseUser;
+User currentfirebaseUser;
 
 Users userCurrentInfo;

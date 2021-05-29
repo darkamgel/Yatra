@@ -7,5 +7,6 @@ String mapKey = "your key";
 
 User firebaseUser;
 User currentfirebaseUser;
+StreamSubscription<Position> homeTabPageStreamSubscription;
 
 Users userCurrentInfo;

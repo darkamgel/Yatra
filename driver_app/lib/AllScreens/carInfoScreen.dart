@@ -1,3 +1,4 @@
+import 'package:driver_app/AllScreens/loginScreen.dart';
 import 'package:driver_app/AllScreens/mainscreen.dart';
 import 'package:driver_app/AllScreens/registrationScreen.dart';
 import 'package:driver_app/configMaps.dart';
@@ -228,7 +229,7 @@ class CarInfoScreen extends StatelessWidget {
 
     displayToastMessage("Your Details hasbeen added , please login through Login Screen", context);
     
-    Navigator.pushNamedAndRemoveUntil(context, MainScreen.idscreen, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idscreen, (route) => false);
 
   }
 }

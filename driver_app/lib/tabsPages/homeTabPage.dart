@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:driver_app/AllScreens/registrationScreen.dart';
 import 'package:driver_app/Assistants/assistantMethods.dart';
+import 'package:driver_app/Notifications/pushNotificationService.dart';
 import 'package:driver_app/configMaps.dart';
 import 'package:driver_app/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
@@ -16,23 +18,23 @@ class HomeTabPage extends StatefulWidget {
     zoom: 14.4746,
   );
 
-
-
   @override
   _HomeTabPageState createState() => _HomeTabPageState();
 }
 
 class _HomeTabPageState extends State<HomeTabPage> {
-
-
-
-
   Position currentPosition;
   var geoLocator = Geolocator();
 
   String driverStatusText = "Offline Now - Go Online";
   Color driverStatusColor = Colors.blueGrey[400];
   bool isDriverAvailable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentDriverInfo();
+  }
 
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
@@ -54,6 +56,16 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
     // String address = await AssistantMethods.searchCoordinateAddress(position, context);
     // print("This  is your address::" + address);
+  }
+
+  /*************************************push notification service*****************/
+
+  void getCurrentDriverInfo() async {
+    currentfirebaseUser = await FirebaseAuth.instance.currentUser;
+    PushNotificationService pushNotificationService = PushNotificationService();
+
+    pushNotificationService.initialize(context);
+    pushNotificationService.getToken();
   }
 
   @override
@@ -84,9 +96,9 @@ class _HomeTabPageState extends State<HomeTabPage> {
         ),
 
         Positioned(
-          top: 15.0,
+          top: -10.0,
           left: 0.0,
-          right: 0.0,
+          right: 40.0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -153,15 +165,11 @@ class _HomeTabPageState extends State<HomeTabPage> {
         desiredAccuracy: LocationAccuracy.high);
     currentPosition = position;
 
-     Geofire.initialize("availableDrivers");
-     Geofire.setLocation(currentfirebaseUser.uid, currentPosition.latitude,
+    Geofire.initialize("availableDrivers");
+    Geofire.setLocation(currentfirebaseUser.uid, currentPosition.latitude,
         currentPosition.longitude);
 
-     rideRequestRef.onValue.listen((event) {
-
-
-
-    });
+    rideRequestRef.onValue.listen((event) {});
   }
 
   void getLocationLiveUpdates() {
@@ -169,7 +177,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
         Geolocator.getPositionStream().listen((Position position) {
       currentPosition = position;
       if (isDriverAvailable == true) {
-         Geofire.setLocation(
+        Geofire.setLocation(
             currentfirebaseUser.uid, position.latitude, position.longitude);
       }
       LatLng latLng = LatLng(position.latitude, position.longitude);
@@ -178,17 +186,17 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   /****************************Go offline function***********************************/ //
-  void makeDriverOfflineNow() async{
+  void makeDriverOfflineNow() async {
     await Geofire.removeLocation(currentfirebaseUser.uid);
     rideRequestRef.onDisconnect();
     rideRequestRef.remove();
     rideRequestRef = null;
   }
 
-  // void makeDriverOfflineNow() {
-  //    Geofire.removeLocation(currentfirebaseUser.uid);
-  //   rideRequestRef.onDisconnect();
-  //   rideRequestRef.remove();
-  //   rideRequestRef = null;
-  // }
+// void makeDriverOfflineNow() {
+//    Geofire.removeLocation(currentfirebaseUser.uid);
+//   rideRequestRef.onDisconnect();
+//   rideRequestRef.remove();
+//   rideRequestRef = null;
+// }
 }

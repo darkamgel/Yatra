@@ -1,5 +1,4 @@
-
-
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:driver_app/Models/ridedDetails.dart';
 import 'package:driver_app/Notifications/NotificationDialog.dart';
 import 'package:driver_app/configMaps.dart';
@@ -8,7 +7,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PushNotificationService {
@@ -50,7 +48,17 @@ class PushNotificationService {
         .child(rideRequestId)
         .once()
         .then((DataSnapshot dataSnapshot) {
-      if (dataSnapshot.value != null) {
+      if (dataSnapshot.value != null)
+      {
+
+        /******************************Adding sound *************************/
+
+           assetsAudioPlayer.open(Audio("sounds/alert.mp3"));
+           assetsAudioPlayer.play();
+
+
+
+
         double pickUpLocationLat =
             double.parse(dataSnapshot.value['pickup']['latitude'].toString());
         double pickUpLocationLng =

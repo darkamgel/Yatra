@@ -27,6 +27,10 @@ dependencies:
   animated_text_kit:
   flutter_polyline_points:
   font_awesome_flutter:
+  curved_navigation_bar:
+  flutter_geofire:
+  firebase_messaging:
+  assets_audio_player:
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +62,7 @@ flutter:
     - images/yatra_logo.png
     - images/background.png
     - images/background2.jpg
+    - sounds/alert.mp3
 
   fonts:
     - family: Signatra

@@ -10,3 +10,4 @@ User currentfirebaseUser;
 StreamSubscription<Position> homeTabPageStreamSubscription;
 
 Users userCurrentInfo;
+final assetsAudioPlayer = AssetsAudioPlayer();

@@ -11,3 +11,4 @@ StreamSubscription<Position> homeTabPageStreamSubscription;
 
 Users userCurrentInfo;
 final assetsAudioPlayer = AssetsAudioPlayer();
+Position currentPosition;

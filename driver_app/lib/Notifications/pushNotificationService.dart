@@ -1,5 +1,5 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:driver_app/Models/ridedDetails.dart';
+import 'package:driver_app/Models/riderDetails.dart';
 import 'package:driver_app/Notifications/NotificationDialog.dart';
 import 'package:driver_app/configMaps.dart';
 import 'package:driver_app/main.dart';
@@ -78,7 +78,7 @@ class PushNotificationService {
         rideDetails.ride_request_id = rideRequestId;
         rideDetails.pickup_address = pickUpAddress;
         rideDetails.dropoff_address = dropOffAddress;
-        rideDetails.pickup = LatLng(pickUpLocationLat, pickUpLocationLat);
+        rideDetails.pickup = LatLng(pickUpLocationLat, pickUpLocationLng);
         rideDetails.dropoff = LatLng(dropOffLocationLat, dropOffLocationLng);
         rideDetails.payment_method = paymentMethod;
 

@@ -23,7 +23,7 @@ class HomeTabPage extends StatefulWidget {
 }
 
 class _HomeTabPageState extends State<HomeTabPage> {
-  Position currentPosition;
+
   var geoLocator = Geolocator();
 
   String driverStatusText = "Offline Now - Go Online";
@@ -168,6 +168,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
     Geofire.initialize("availableDrivers");
     Geofire.setLocation(currentfirebaseUser.uid, currentPosition.latitude,
         currentPosition.longitude);
+    
+    rideRequestRef.set("searching");
 
     rideRequestRef.onValue.listen((event) {});
   }

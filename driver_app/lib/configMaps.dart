@@ -8,6 +8,7 @@ String mapKey = "your key";
 User firebaseUser;
 User currentfirebaseUser;
 StreamSubscription<Position> homeTabPageStreamSubscription;
+StreamSubscription<Position> rideStreamSubscription;
 
 Users userCurrentInfo;
 final assetsAudioPlayer = AssetsAudioPlayer();

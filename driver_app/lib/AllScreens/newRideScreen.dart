@@ -5,8 +5,10 @@ import 'package:driver_app/Assistants/assistantMethods.dart';
 
 
 import 'package:driver_app/Models/riderDetails.dart';
+import 'package:driver_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
@@ -39,9 +41,71 @@ class _NewRideScreenState extends State<NewRideScreen> {
   List<LatLng> polylineCorOrdinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
   double mapPaddingFromBottom = 0;
+  var geoLocator = Geolocator();
+  var locationOptions = LocationOptions(
+    accuracy: LocationAccuracy.bestForNavigation
+  );
+  BitmapDescriptor animatingMarkerIcon;
+  Position myPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    acceptRideRequest();
+  }
+
+  void createIconMarker() {
+    if (animatingMarkerIcon == null) {
+      ImageConfiguration imageConfiguration =
+      createLocalImageConfiguration(context, size: Size(2, 2));
+      BitmapDescriptor.fromAssetImage(imageConfiguration, "images/car-android.png")
+          .then((value) {
+        animatingMarkerIcon = value;
+      });
+    }
+  }
+  void getRideLiveLocationUpdates()
+  {
+    rideStreamSubscription =
+        Geolocator.getPositionStream().listen((Position position) {
+          currentPosition = position;
+          myPosition = position;
+          LatLng mPosition = LatLng(position.latitude, position.longitude);
+          Marker animatingMarker = Marker(
+              markerId:MarkerId("animating"),
+            position:mPosition,
+            icon: animatingMarkerIcon,
+            infoWindow: InfoWindow(title: "Current Location"),
+          );
+          setState(() {
+            CameraPosition cameraPosition = new CameraPosition(target: mPosition,zoom: 17);
+            newRideGoogleMapController.animateCamera(
+                CameraUpdate.newCameraPosition(cameraPosition));
+            
+            markersSet.removeWhere((marker)=>marker.markerId.value == "animating");
+            markersSet.add(animatingMarker);
+
+          });
+          
+        });
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
+     createIconMarker();
     return Scaffold(
       body: Stack(
         children: [
@@ -73,6 +137,7 @@ class _NewRideScreenState extends State<NewRideScreen> {
               var pickUpLatLng = widget.rideDetails.pickup;
 
                await getPlaceDirection(currentLatLng, pickUpLatLng);
+                getRideLiveLocationUpdates();
             },
           ),
 
@@ -316,6 +381,26 @@ class _NewRideScreenState extends State<NewRideScreen> {
       circleSet.add(pickUpLocCircle);
       circleSet.add(dropOffLocCircle);
     });
+  }
+
+
+  void acceptRideRequest()
+  {
+    String rideRequestId = widget.rideDetails.ride_request_id;
+    newRequestsRef.child(rideRequestId).child("status").set("accepted");
+    newRequestsRef.child(rideRequestId).child("driver_name").set(driversInformation.name);
+    newRequestsRef.child(rideRequestId).child("driver_phone").set(driversInformation.phone);
+    newRequestsRef.child(rideRequestId).child("driver_id").set(driversInformation.id);
+    newRequestsRef.child(rideRequestId).child("car_details")
+        .set('${driversInformation.car_color} - ${driversInformation.car_model} - ${driversInformation.car_number}');
+
+    Map locMap={
+      "latitude":currentPosition.latitude.toString(),
+      "longitude":currentPosition.longitude.toString(),
+
+    };
+
+    newRequestsRef.child(rideRequestId).child("driver_location").set(locMap);
   }
 
 

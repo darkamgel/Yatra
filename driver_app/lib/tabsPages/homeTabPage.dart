@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:driver_app/AllScreens/registrationScreen.dart';
 import 'package:driver_app/Assistants/assistantMethods.dart';
+import 'package:driver_app/Models/drivers.dart';
 import 'package:driver_app/Notifications/pushNotificationService.dart';
 import 'package:driver_app/configMaps.dart';
 import 'package:driver_app/main.dart';
@@ -62,6 +63,18 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
   void getCurrentDriverInfo() async {
     currentfirebaseUser = await FirebaseAuth.instance.currentUser;
+
+    driversRef.child(currentfirebaseUser.uid).once().then((DataSnapshot dataSnapshot){
+
+      if(dataSnapshot.value != null)
+        {
+          driversInformation = Drivers.fromSnapshot(dataSnapshot);
+
+        }
+
+
+    });
+
     PushNotificationService pushNotificationService = PushNotificationService();
 
     pushNotificationService.initialize(context);

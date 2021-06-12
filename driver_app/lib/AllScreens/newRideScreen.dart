@@ -1,16 +1,13 @@
 import 'dart:async';
-
 import 'package:driver_app/AllWidgets/progressDialog.dart';
 import 'package:driver_app/Assistants/assistantMethods.dart';
-
-
+import 'package:driver_app/Assistants/mapKitAssistant.dart';
 import 'package:driver_app/Models/riderDetails.dart';
 import 'package:driver_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 
 import '../configMaps.dart';
 
@@ -19,19 +16,16 @@ class NewRideScreen extends StatefulWidget {
 
   NewRideScreen({this.rideDetails});
 
-
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
-
 
   @override
   _NewRideScreenState createState() => _NewRideScreenState();
 }
 
 class _NewRideScreenState extends State<NewRideScreen> {
-
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController newRideGoogleMapController;
 
@@ -42,11 +36,13 @@ class _NewRideScreenState extends State<NewRideScreen> {
   PolylinePoints polylinePoints = PolylinePoints();
   double mapPaddingFromBottom = 0;
   var geoLocator = Geolocator();
-  var locationOptions = LocationOptions(
-    accuracy: LocationAccuracy.bestForNavigation
-  );
+  var locationOptions =
+      LocationOptions(accuracy: LocationAccuracy.bestForNavigation);
   BitmapDescriptor animatingMarkerIcon;
   Position myPosition;
+  String status = "accepted";
+  String durationRide="";
+  bool isRequestingDirection = false;
 
   @override
   void initState() {
@@ -57,232 +53,254 @@ class _NewRideScreenState extends State<NewRideScreen> {
   void createIconMarker() {
     if (animatingMarkerIcon == null) {
       ImageConfiguration imageConfiguration =
-      createLocalImageConfiguration(context, size: Size(2, 2));
-      BitmapDescriptor.fromAssetImage(imageConfiguration, "images/car-android.png")
+          createLocalImageConfiguration(context, size: Size(2, 2));
+      BitmapDescriptor.fromAssetImage(
+              imageConfiguration, "images/car-android.png")
           .then((value) {
         animatingMarkerIcon = value;
       });
     }
   }
-  void getRideLiveLocationUpdates()
-  {
+
+  void getRideLiveLocationUpdates() {
+    LatLng oldPos = LatLng(0, 0);
+
     rideStreamSubscription =
         Geolocator.getPositionStream().listen((Position position) {
-          currentPosition = position;
-          myPosition = position;
-          LatLng mPosition = LatLng(position.latitude, position.longitude);
-          Marker animatingMarker = Marker(
-              markerId:MarkerId("animating"),
-            position:mPosition,
-            icon: animatingMarkerIcon,
-            infoWindow: InfoWindow(title: "Current Location"),
-          );
-          setState(() {
-            CameraPosition cameraPosition = new CameraPosition(target: mPosition,zoom: 17);
-            newRideGoogleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(cameraPosition));
-            
-            markersSet.removeWhere((marker)=>marker.markerId.value == "animating");
-            markersSet.add(animatingMarker);
+      currentPosition = position;
+      myPosition = position;
+      LatLng mPosition = LatLng(position.latitude, position.longitude);
 
-          });
-          
+      var rot = MapKitAssistant.getMarkerRotation(oldPos.latitude,
+          oldPos.longitude, myPosition.latitude, myPosition.longitude);
+
+      Marker animatingMarker = Marker(
+        markerId: MarkerId("animating"),
+        position: mPosition,
+        icon: animatingMarkerIcon,
+        rotation: rot,
+        infoWindow: InfoWindow(title: "Current Location"),
+      );
+      setState(() {
+        CameraPosition cameraPosition =
+            new CameraPosition(target: mPosition, zoom: 17);
+        newRideGoogleMapController
+            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+        markersSet
+            .removeWhere((marker) => marker.markerId.value == "animating");
+        markersSet.add(animatingMarker);
+      });
+      oldPos = mPosition;
+      updateRideDetails();
+
+      String rideRequestId = widget.rideDetails.ride_request_id;
+
+      Map locMap = {
+        "latitude": currentPosition.latitude.toString(),
+        "longitude": currentPosition.longitude.toString(),
+      };
+
+      newRequestsRef.child(rideRequestId).child("driver_location").set(locMap);
+
+
         });
-
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
-     createIconMarker();
+    createIconMarker();
     return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            padding: EdgeInsets.only(bottom: mapPaddingFromBottom),
-            mapType: MapType.normal,
-            myLocationButtonEnabled: true,
-            initialCameraPosition: NewRideScreen._kGooglePlex,
-            myLocationEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            GoogleMap(
+              padding: EdgeInsets.only(bottom: mapPaddingFromBottom),
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              initialCameraPosition: NewRideScreen._kGooglePlex,
+              myLocationEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              markers: markersSet,
+              circles: circleSet,
+              polylines: polyLineSet,
+              onMapCreated: (GoogleMapController controller) async {
+                _controllerGoogleMap.complete(controller);
+                newRideGoogleMapController = controller;
 
-            markers: markersSet,
-            circles: circleSet,
-            polylines: polyLineSet,
-            onMapCreated: (GoogleMapController controller) async{
-              _controllerGoogleMap.complete(controller);
-              newRideGoogleMapController = controller;
+                // setState(() {
+                //   mapPaddingFromBottom = 265.0;
 
+                // });
 
-              // setState(() {
-              //   mapPaddingFromBottom = 265.0;
+                var currentLatLng =
+                    LatLng(currentPosition.latitude, currentPosition.longitude);
+                var pickUpLatLng = widget.rideDetails.pickup;
 
-              // });
-
-
-              var currentLatLng = LatLng(
-                  currentPosition.latitude, currentPosition.longitude);
-              var pickUpLatLng = widget.rideDetails.pickup;
-
-               await getPlaceDirection(currentLatLng, pickUpLatLng);
+                await getPlaceDirection(currentLatLng, pickUpLatLng);
                 getRideLiveLocationUpdates();
-            },
-          ),
-
-          Positioned(
-            left: 0.0,
-            right: 0.0,
-            bottom: 0.0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black38,
-                    blurRadius: 16.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0.7, 0.7),
-                  )
-                ],
-              ),
-              height: 270.0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 18.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "10 mins",
-                      style: TextStyle(
-                          fontSize: 14.0,
-                          fontFamily: "Brand-Bold",
-                          color: Colors.deepPurple
-                      ),
-                    ),
-                    Divider(color: Colors.grey,),
-
-                    SizedBox(height: 6.0,),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Sandeep kshetri", style: TextStyle(
-                            fontFamily: "Brand-Bold",
-                            fontSize: 24.0
-                        ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.0),
-                          child: Icon(Icons.call),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0,),
-                    Row(
-                      children: [
-                        Image.asset(
-                          "images/pickicon.png", height: 16.0, width: 16.0,),
-                        SizedBox(width: 18.0,),
-                        Expanded(
-                          child: Container(
-                            child: Text(
-                              "street 66 paris,france",
-                              style: TextStyle(fontSize: 18.0),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 16.0,),
-                    Row(
-                      children: [
-                        Image.asset(
-                          "images/desticon.png", height: 16.0, width: 16.0,),
-                        SizedBox(width: 18.0,),
-                        Expanded(
-                          child: Container(
-                            child: Text(
-                              "street 77 paris,france",
-                              style: TextStyle(fontSize: 18.0),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 26.0,),
-
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: RaisedButton(
-                        onPressed: () {},
-                        // color: Theme.of(context).accentColor,
-                        color: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(17.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Arrived", style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                              ),
-                              Icon(Icons.directions_car, color: Colors.white,
-                                size: 26.0,),
-
-                            ],
-                          ),
-                        ),
-                      ),
+              },
+            ),
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              bottom: 0.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 16.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(0.7, 0.7),
                     )
-
                   ],
+                ),
+                height: 270.0,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0, vertical: 18.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        durationRide,
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: "Brand-Bold",
+                            color: Colors.deepPurple),
+                      ),
+                      Divider(
+                        color: Colors.grey,
+                      ),
+                      SizedBox(
+                        height: 6.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Sandeep kshetri",
+                            style: TextStyle(
+                                fontFamily: "Brand-Bold", fontSize: 24.0),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10.0),
+                            child: Icon(Icons.call),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            "images/pickicon.png",
+                            height: 16.0,
+                            width: 16.0,
+                          ),
+                          SizedBox(
+                            width: 18.0,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Text(
+                                "street 66 paris,france",
+                                style: TextStyle(fontSize: 18.0),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            "images/desticon.png",
+                            height: 16.0,
+                            width: 16.0,
+                          ),
+                          SizedBox(
+                            width: 18.0,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Text(
+                                "street 77 paris,france",
+                                style: TextStyle(fontSize: 18.0),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 26.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: RaisedButton(
+                          onPressed: () {},
+                          // color: Theme.of(context).accentColor,
+                          color: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(17.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Arrived",
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.directions_car,
+                                  color: Colors.white,
+                                  size: 26.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-
-
-        ],
+          ],
+        ),
       ),
     );
   }
 
 //***********************************Direction Details*****************************************//
 
-  Future<void> getPlaceDirection(LatLng pickUpLatLng, LatLng dropOffLatLng) async {
-
-
+  Future<void> getPlaceDirection(
+      LatLng pickUpLatLng, LatLng dropOffLatLng) async {
     showDialog(
         context: context,
         builder: (BuildContext context) => ProgressDialog(
-          message: "please wait...",
-        ));
+              message: "please wait...",
+            ));
 
     var details = await AssistantMethods.obtainDirectionDetails(
         pickUpLatLng, dropOffLatLng);
-
 
     Navigator.pop(context);
     print("This is Encoded Points::");
@@ -292,7 +310,7 @@ class _NewRideScreenState extends State<NewRideScreen> {
 
     PolylinePoints polylinePoints = PolylinePoints();
     List<PointLatLng> decodedPolyLinePointsResult =
-    polylinePoints.decodePolyline(details.encodedPoints);
+        polylinePoints.decodePolyline(details.encodedPoints);
 
     polylineCorOrdinates.clear();
 
@@ -346,7 +364,6 @@ class _NewRideScreenState extends State<NewRideScreen> {
 
     Marker pickUpLocMarker = Marker(
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-
       position: pickUpLatLng,
       markerId: MarkerId("pickUpId"),
     );
@@ -383,26 +400,59 @@ class _NewRideScreenState extends State<NewRideScreen> {
     });
   }
 
-
-  void acceptRideRequest()
-  {
+  void acceptRideRequest() {
     String rideRequestId = widget.rideDetails.ride_request_id;
     newRequestsRef.child(rideRequestId).child("status").set("accepted");
-    newRequestsRef.child(rideRequestId).child("driver_name").set(driversInformation.name);
-    newRequestsRef.child(rideRequestId).child("driver_phone").set(driversInformation.phone);
-    newRequestsRef.child(rideRequestId).child("driver_id").set(driversInformation.id);
-    newRequestsRef.child(rideRequestId).child("car_details")
-        .set('${driversInformation.car_color} - ${driversInformation.car_model} - ${driversInformation.car_number}');
+    newRequestsRef
+        .child(rideRequestId)
+        .child("driver_name")
+        .set(driversInformation.name);
+    newRequestsRef
+        .child(rideRequestId)
+        .child("driver_phone")
+        .set(driversInformation.phone);
+    newRequestsRef
+        .child(rideRequestId)
+        .child("driver_id")
+        .set(driversInformation.id);
+    newRequestsRef.child(rideRequestId).child("car_details").set(
+        '${driversInformation.car_color} - ${driversInformation.car_model} - ${driversInformation.car_number}');
 
-    Map locMap={
-      "latitude":currentPosition.latitude.toString(),
-      "longitude":currentPosition.longitude.toString(),
-
+    Map locMap = {
+      "latitude": currentPosition.latitude.toString(),
+      "longitude": currentPosition.longitude.toString(),
     };
 
     newRequestsRef.child(rideRequestId).child("driver_location").set(locMap);
   }
 
+  void updateRideDetails() async {
+    if (isRequestingDirection == false) {
+      isRequestingDirection= true;
 
 
+      if (myPosition == null) {
+        return;
+      }
+
+      var posLatLng = LatLng(myPosition.latitude, myPosition.longitude);
+      LatLng destinationLatLng;
+
+      if (status == "accepted") {
+        destinationLatLng = widget.rideDetails.pickup;
+      } else {
+        destinationLatLng = widget.rideDetails.dropoff;
+      }
+
+      var directionDetails = await AssistantMethods.obtainDirectionDetails(
+          posLatLng, destinationLatLng);
+      if (directionDetails != null) {
+        setState(() {
+          durationRide = directionDetails.durationText;
+        });
+      }
+
+      isRequestingDirection = false;
+    }
+  }
 }

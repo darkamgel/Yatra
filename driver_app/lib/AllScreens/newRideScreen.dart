@@ -1,14 +1,15 @@
 import 'dart:async';
+import 'package:driver_app/AllWidgets/CollectFareDialog.dart';
 import 'package:driver_app/AllWidgets/progressDialog.dart';
 import 'package:driver_app/Assistants/assistantMethods.dart';
 import 'package:driver_app/Assistants/mapKitAssistant.dart';
 import 'package:driver_app/Models/riderDetails.dart';
 import 'package:driver_app/main.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../configMaps.dart';
 
 class NewRideScreen extends StatefulWidget {
@@ -41,8 +42,12 @@ class _NewRideScreenState extends State<NewRideScreen> {
   BitmapDescriptor animatingMarkerIcon;
   Position myPosition;
   String status = "accepted";
-  String durationRide="";
+  String durationRide = "";
   bool isRequestingDirection = false;
+  String btntitle = "Arrived";
+  Color btnColor = Colors.blueAccent;
+  Timer timer;
+  int durationCounter = 0;
 
   @override
   void initState() {
@@ -102,9 +107,7 @@ class _NewRideScreenState extends State<NewRideScreen> {
       };
 
       newRequestsRef.child(rideRequestId).child("driver_location").set(locMap);
-
-
-        });
+    });
   }
 
   @override
@@ -249,9 +252,63 @@ class _NewRideScreenState extends State<NewRideScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: RaisedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            /*********************************Driver le ride accept garesin*************************************************/
+                            if (status == "accepted") {
+                              status = "arrived";
+                              String rideRequestId =
+                                  widget.rideDetails.ride_request_id;
+                              newRequestsRef
+                                  .child(rideRequestId)
+                                  .child("status")
+                                  .set(status);
+
+                              setState(() {
+                                btntitle = "Start Trip";
+                                btnColor = Colors.purple;
+                              });
+
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      ProgressDialog(
+                                        message: "Please Wait...",
+                                      ));
+
+                              await getPlaceDirection(
+                                widget.rideDetails.pickup,
+                                widget.rideDetails.dropoff,
+                              );
+
+                              Navigator.pop(context);
+                            }
+
+                            /*************************Rider driver ko position pugesin ****************************************************************************/
+                            else if (status == "arrived") {
+                              status = "onride";
+                              String rideRequestId =
+                                  widget.rideDetails.ride_request_id;
+                              newRequestsRef
+                                  .child(rideRequestId)
+                                  .child("status")
+                                  .set(status);
+
+                              setState(() {
+                                btntitle = "End Trip";
+                                btnColor = Colors.redAccent;
+                              });
+
+                              initTimer();
+                            }
+
+                            /**********************************Ride end vayesin paisa collect and save in database and turn off the live location too******************************************************************/
+                            else if (status == "onride") {
+                              endTheTrip();
+                            }
+                          },
                           // color: Theme.of(context).accentColor,
-                          color: Colors.green,
+                          color: btnColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -261,7 +318,7 @@ class _NewRideScreenState extends State<NewRideScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Arrived",
+                                  btntitle,
                                   style: TextStyle(
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.bold,
@@ -428,8 +485,7 @@ class _NewRideScreenState extends State<NewRideScreen> {
 
   void updateRideDetails() async {
     if (isRequestingDirection == false) {
-      isRequestingDirection= true;
-
+      isRequestingDirection = true;
 
       if (myPosition == null) {
         return;
@@ -455,4 +511,76 @@ class _NewRideScreenState extends State<NewRideScreen> {
       isRequestingDirection = false;
     }
   }
+
+  /**********************Riding start from pickup to dropoff location lagne Time**************************************************************************/
+  void initTimer() {
+    const interval = Duration(seconds: 1);
+    timer = Timer.periodic(interval, (timer) {
+      durationCounter = durationCounter + 1;
+    });
+  }
+
+  endTheTrip() async {
+    timer.cancel();
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) =>
+            ProgressDialog(message: "Please wait..."));
+
+    var currentLatLng = LatLng(myPosition.latitude, myPosition.longitude);
+    var directionalDetails = await AssistantMethods.obtainDirectionDetails(
+        widget.rideDetails.pickup, currentLatLng);
+
+    Navigator.pop(context);
+
+    int fareAmount = AssistantMethods.calculatefares(directionalDetails);
+
+    String rideRequestId = widget.rideDetails.ride_request_id;
+    newRequestsRef
+        .child(rideRequestId)
+        .child("fares")
+        .set(fareAmount.toString());
+    newRequestsRef.child(rideRequestId).child("status").set("ended");
+
+    rideStreamSubscription.cancel();
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => CollectFareDialog(
+              paymentMethod: widget.rideDetails.payment_method,
+              fareAmount: fareAmount,
+            ));
+    saveEarnings(fareAmount);
+  }
+
+  /***************************saving Driver Earning , fare and other in database*******************************************************************************/
+
+void saveEarnings(int fareAmount)
+{
+  driversRef.child(currentfirebaseUser.uid).child("earnings").once()
+      .then((DataSnapshot datasnapshot){
+
+        /******************************old driver past earnings + new********************************/
+        if(datasnapshot.value != null)
+        {
+          double oldEarnings =  double.parse(datasnapshot.value.toString());
+          double totalEarnings = fareAmount + oldEarnings;
+          driversRef.child(currentfirebaseUser.uid)
+              .child("earnings").set(totalEarnings.toStringAsFixed(2));
+        }else{
+          /******************************new driver earnings********************************/
+          double totalEarnings = fareAmount.toDouble();
+          driversRef.child(currentfirebaseUser.uid)
+              .child("earnings").set(totalEarnings.toStringAsFixed(2));
+
+        }
+    
+
+  });
+  
+}
+
+
 }

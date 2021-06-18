@@ -72,10 +72,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   BitmapDescriptor nearByIcon;
 
-
   List<NearbyAvailableDrivers> availableDrivers;
 
 
+  String state = "normal";
 
   @override
   void initState() {
@@ -136,6 +136,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   void cancelRideRequest() {
     rideRequestRef.remove();
+
+    setState(() {
+      state = "normal";
+    });
   }
 
   void displayRequestRideContainer() {
@@ -214,19 +218,24 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     ),
                     child: Row(
                       children: [
-
                         CircleAvatar(
-                          backgroundImage: AssetImage( "images/user_icon.png",),
+                          backgroundImage: AssetImage(
+                            "images/user_icon.png",
+                          ),
                           radius: 50,
                           child: Padding(
-                            padding:  EdgeInsets.only(top:70,left: 70),
+                            padding: EdgeInsets.only(top: 70, left: 70),
                             child: FloatingActionButton(
-
-                                child: Icon(Icons.camera_alt_rounded,size:40, color:Colors.black,),
-                                onPressed: (){print("edioss");},
+                              child: Icon(
+                                Icons.camera_alt_rounded,
+                                size: 40,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                print("edioss");
+                              },
                             ),
                           ),
-
                         ),
                         SizedBox(
                           width: 16.0,
@@ -235,7 +244,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                        // " ${userCurrentInfo.name}",
+                              // " ${userCurrentInfo.name}",
                               "Name",
                               style: TextStyle(
                                   fontSize: 18.0,
@@ -417,9 +426,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topRight,
-                      end:Alignment.bottomRight,
+                      end: Alignment.bottomRight,
                       colors: [
-
                         // backgroundColor: Color(0xFFB6D7BE),
                         Color(0xFFB6D7BE),
                         Colors.red,
@@ -427,7 +435,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         Colors.blue,
                       ],
                     ),
-                    borderRadius: BorderRadius.only(topRight: Radius.circular(20)),
+                    borderRadius:
+                        BorderRadius.only(topRight: Radius.circular(20)),
                     // color: Colors.white,
                   ),
                   child: Padding(
@@ -438,7 +447,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       children: [
                         SizedBox(height: 6.0),
                         Text(
-                           "Hi There",
+                          "Hi There",
                           // "hi ${userCurrentInfo.name ?? "There"}",
 
                           style: TextStyle(
@@ -523,7 +532,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                           .pickUpLocation
                                           .placeName
                                       : "Add Home",
-                                  style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w900),
                                 ),
                                 SizedBox(
                                   height: 4.0,
@@ -531,7 +542,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 Text(
                                   "Home Location",
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.bold),
+                                      color: Colors.black,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold),
                                 )
                               ],
                             )
@@ -558,7 +571,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               children: [
                                 Text(
                                   "Add Work",
-                                  style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w900),
                                 ),
                                 SizedBox(
                                   height: 4.0,
@@ -566,7 +581,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 Text(
                                   "Office Location",
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 12.0,fontWeight: FontWeight.bold),
+                                      color: Colors.black,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.bold),
                                 )
                               ],
                             )
@@ -704,13 +721,16 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: RaisedButton(
                           onPressed: () {
+
+                            setState(() {
+                              state="requesting";
+                            });
+
+
                             displayRequestRideContainer();
-                            availableDrivers = GeoFireAssistant.nearbyAvailableDriversList;
-                              searchNearestDriver();
-
-
-
-
+                            availableDrivers =
+                                GeoFireAssistant.nearbyAvailableDriversList;
+                            searchNearestDriver();
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(14.0),
@@ -815,8 +835,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         decoration: BoxDecoration(
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(26.0),
-                          border:
-                              Border.all(width: 2.0, color: Colors.red),
+                          border: Border.all(width: 2.0, color: Colors.red),
                         ),
                         child: Icon(
                           Icons.close,
@@ -1066,26 +1085,20 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     }
   }
 
-
-
-  void noDriverFound(){
-    showDialog(context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context)=>NoDriverAvailableDialog()
-
-    );
+  void noDriverFound() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => NoDriverAvailableDialog());
   }
 
-
-  void searchNearestDriver()
-  {
-    if(availableDrivers.length == 0)
-      {
-        cancelRideRequest();
-        resetApp();
-        noDriverFound();
-        return;
-      }
+  void searchNearestDriver() {
+    if (availableDrivers.length == 0) {
+      cancelRideRequest();
+      resetApp();
+      noDriverFound();
+      return;
+    }
     var driver = availableDrivers[0];
     notifyDriver(driver);
     availableDrivers.removeAt(0);
@@ -1093,18 +1106,56 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   /**************************************************PUSH NOTIFICATION AUTOMATIC*****************************************/
 
-void notifyDriver(NearbyAvailableDrivers driver)
-{
-  driversRef.child(driver.key).child("newRide").set(rideRequestRef.key);
-  driversRef.child(driver.key).child("token").once()
-      .then((DataSnapshot snap)  {
-        if(snap.value != null){
-          String token = snap.value.toString();
-          AssistantMethods.sendNotificationToDriver(token, rideRequestRef.key, context);
+  void notifyDriver(NearbyAvailableDrivers driver) {
+    driversRef.child(driver.key).child("newRide").set(rideRequestRef.key);
+    driversRef
+        .child(driver.key)
+        .child("token")
+        .once()
+        .then((DataSnapshot snap) {
+      if (snap.value != null) {
+        String token = snap.value.toString();
+        AssistantMethods.sendNotificationToDriver(
+            token, rideRequestRef.key, context);
+      } else {
+        return;
+      }
+
+      /***********************************Ride Request Timeout*******************************/
+
+      const oneSecondPassed = Duration(seconds: 1);
+      var timer = Timer.periodic(oneSecondPassed, (timer) {
+
+        if(state != "requesting")
+        {
+          driversRef.child(driver.key).child("newRide").set("cancelled");
+          driversRef.child(driver.key).child("newRide").onDisconnect();
+          driverRequestTimeOut = 30;
+          timer.cancel();
+
         }
-  });
-
-}
 
 
+        driverRequestTimeOut =
+            driverRequestTimeOut - 1; //30-1=29-1=28 and so.on
+
+        driversRef.child(driver.key).child("newRide").onValue.listen((event) {
+          if (event.snapshot.value.toString() == "accepted") {
+            driversRef.child(driver.key).child("newRide").onDisconnect();
+            driverRequestTimeOut = 30;
+            timer.cancel();
+          }
+        });
+
+        if (driverRequestTimeOut == 0) {
+          driversRef.child(driver.key).child("newRide").set("timeout");
+          driversRef.child(driver.key).child("newRide").onDisconnect();
+          driverRequestTimeOut = 30;
+          timer.cancel();
+
+          searchNearestDriver();
+        }
+      });
+    });
+  }
 }

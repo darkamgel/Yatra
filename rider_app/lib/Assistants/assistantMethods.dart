@@ -1,5 +1,12 @@
+
+
+
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +16,7 @@ import 'package:rider_app/Models/address.dart';
 import 'package:rider_app/Models/allUsers.dart';
 import 'package:rider_app/Models/directionDetails.dart';
 import 'package:rider_app/configMaps.dart';
-
+import 'package:http/http.dart'as http;
 class AssistantMethods {
 
   ///**************************************afno location dine wala **************************************///
@@ -82,7 +89,7 @@ class AssistantMethods {
   static int calculatefares(DirectionDetails directionDetails){
     //interms of USD//for each minute we are charging $.20
     double timeTraveledfare = (directionDetails.durationValue/60) * 0.10;
-    //per km $.20
+    //per km $.10
     double distanceTraveledfare = (directionDetails.distanceValue/1000) * 0.10;
 
     double totalFareAmount = timeTraveledfare + distanceTraveledfare;
@@ -113,6 +120,55 @@ class AssistantMethods {
 
       }
     });
+
+  }
+  ////rotation ma haleko///
+  static double createRandomNumber(int num){
+    var random = Random();
+    int radNumber = random.nextInt(num);
+    return radNumber.toDouble();
+
+  }
+/**************************notification sending FUnction*************************/
+  //build context paxxi add gareko
+
+  static sendNotificationToDriver(String token , String ride_request_id,BuildContext context) async
+  {
+    
+    var destionation = Provider.of<AppData>(context,listen: false).dropOffLocation;
+    Map<String,String> headerMap =
+        {
+          'Content-Type': 'application/json',
+          'Authorization': serverToken,
+        };
+    Map notificationMap =
+    {
+      'body': 'DropOff Address, ${destionation.placeName}',
+      'title': 'New Ride Request'
+    };
+
+    Map dataMap=
+        {
+          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+          'id': '1',
+          'status': 'done',
+          'ride_request_id':ride_request_id,
+        };
+
+    Map SendNotificationMap=
+    {
+      "notification":notificationMap,
+      "data":dataMap,
+      "priority":"high",
+      "to":token,
+    };
+
+    var res = await http.post(
+        'https://fcm.googleapis.com/fcm/send',
+      headers: headerMap,
+      body: jsonEncode(SendNotificationMap)
+    );
+
 
   }
 

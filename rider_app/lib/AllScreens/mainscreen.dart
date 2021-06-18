@@ -20,6 +20,7 @@ import 'package:rider_app/Assistants/geofireAssistant.dart';
 import 'package:rider_app/Models/directionDetails.dart';
 import 'package:rider_app/Models/nearbyAvailableDrivers.dart';
 import 'package:rider_app/configMaps.dart';
+import 'package:rider_app/main.dart';
 
 class MainScreen extends StatefulWidget {
   static const String idscreen = "mainScreen";
@@ -756,7 +757,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
                 ),
-                color: Colors.white,
+                // color:Color(0xFFB6D7BE),
+                color: Colors.white70,
                 boxShadow: [
                   BoxShadow(
                       spreadRadius: 0.5,
@@ -811,10 +813,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         height: 60.0,
                         width: 60.0,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.blue,
                           borderRadius: BorderRadius.circular(26.0),
                           border:
-                              Border.all(width: 2.0, color: Colors.grey[300]),
+                              Border.all(width: 2.0, color: Colors.red),
                         ),
                         child: Icon(
                           Icons.close,
@@ -1085,7 +1087,24 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         return;
       }
     var driver = availableDrivers[0];
+    notifyDriver(driver);
     availableDrivers.removeAt(0);
   }
+
+  /**************************************************PUSH NOTIFICATION AUTOMATIC*****************************************/
+
+void notifyDriver(NearbyAvailableDrivers driver)
+{
+  driversRef.child(driver.key).child("newRide").set(rideRequestRef.key);
+  driversRef.child(driver.key).child("token").once()
+      .then((DataSnapshot snap)  {
+        if(snap.value != null){
+          String token = snap.value.toString();
+          AssistantMethods.sendNotificationToDriver(token, rideRequestRef.key, context);
+        }
+  });
+
+}
+
 
 }

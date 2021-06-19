@@ -65,6 +65,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   double rideDetailsContainerHeight = 0;
   double requestrideConatinerHeight = 0;
   double searchContainerHeight = 300.0;
+  double driverDetailsContainerHeight=0;
 
   bool drawerOpen = true;
   DatabaseReference rideRequestRef;
@@ -74,8 +75,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   List<NearbyAvailableDrivers> availableDrivers;
 
-
   String state = "normal";
+
+  StreamSubscription<Event> ridestreamSubscription;
 
   @override
   void initState() {
@@ -114,6 +116,48 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       "dropoff_address": dropOff.placeName,
     };
     rideRequestRef.set(riderinfoMap);
+    
+    ridestreamSubscription = rideRequestRef.onValue.listen((event) {
+      if(event.snapshot.value == null)
+        {
+          return;
+        }
+      if(event.snapshot.value["car_details"]!=null)
+      {
+        setState(() {
+          carDetailsDriver=event.snapshot.value["car_details"].toString();
+        });
+      }
+      if(event.snapshot.value["driver_name"]!=null)
+      {
+        setState(() {
+          driverName=event.snapshot.value["driver_name"].toString();
+        });
+      }
+      if(event.snapshot.value["driver_phone"]!=null)
+      {
+        setState(() {
+          driverphone=event.snapshot.value["driver_phone"].toString();
+        });
+      }
+
+
+
+
+
+
+
+
+
+      if(event.snapshot.value["status"]!=null)
+        {
+          statusRide=event.snapshot.value["status"].toString();
+        }
+      if(statusRide == "accepted")
+        {
+          displayDriverDetailsContainer();
+        }
+    });
   }
 
 //*********************reseting app after user click cancel button *******************************/
@@ -160,6 +204,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       rideDetailsContainerHeight = 240;
       bottomPaddingofMap = 230.0;
       drawerOpen = false;
+    });
+  }
+
+  void displayDriverDetailsContainer(){
+    setState(() {
+      requestrideConatinerHeight=0.0;
+      rideDetailsContainerHeight=0.0;
+      bottomPaddingofMap = 300.0;
+      driverDetailsContainerHeight=320.0;
     });
   }
 
@@ -721,11 +774,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: RaisedButton(
                           onPressed: () {
-
                             setState(() {
-                              state="requesting";
+                              state = "requesting";
                             });
-
 
                             displayRequestRideContainer();
                             availableDrivers =
@@ -765,7 +816,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          //*********************************************Animated Text kit container*********************************//
+          //*********************************************Animated Text kit container and Request cancel ui*********************************//
 
           Positioned(
             bottom: 0.0,
@@ -860,7 +911,126 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-          )
+          ),
+
+          /**************************************************View Driver Deatils*******************************************/
+          Positioned(
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+                // color:Color(0xFFB6D7BE),
+                color: Colors.white70,
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 0.5,
+                      blurRadius: 16.0,
+                      color: Colors.black54,
+                      offset: Offset(0.7, 0.7)),
+                ],
+              ),
+              height: driverDetailsContainerHeight,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0,vertical: 18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 6.0,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(rideStatus,textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20.0,fontFamily: "rand-Bold"),),
+                      ],
+                    ),
+                    SizedBox(height: 22.0,),
+
+                    Divider(height: 2.0,thickness: 2.0,),
+
+                    Text(carDetailsDriver,style: TextStyle(color: Colors.grey),),
+
+                    Text(driverName,style: TextStyle(fontSize: 20.0),),
+
+                    SizedBox(height: 22.0,),
+
+                    Divider(),
+
+                    SizedBox(height: 22.0,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 55.0,
+                              width: 55.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
+                                border: Border.all(width: 2.0,color: Colors.grey),
+                              ),
+                              child:Icon(
+                                Icons.call,
+                              ),
+                            ),
+                            SizedBox(height: 10.0,),
+                            Text("Call"),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 55.0,
+                              width: 55.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
+                                border: Border.all(width: 2.0,color: Colors.grey),
+                              ),
+                              child:Icon(
+                                Icons.list,
+                              ),
+                            ),
+                            SizedBox(height: 10.0,),
+                            Text("Call"),
+                          ],
+                        ),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 55.0,
+                              width: 55.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
+                                border: Border.all(width: 2.0,color: Colors.grey),
+                              ),
+                              child:Icon(
+                                Icons.close,
+                              ),
+                            ),
+                            SizedBox(height: 10.0,),
+                            Text("Cancel"),
+                          ],
+                        )
+                      ],
+
+                    ),
+
+
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -1125,16 +1295,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
       const oneSecondPassed = Duration(seconds: 1);
       var timer = Timer.periodic(oneSecondPassed, (timer) {
-
-        if(state != "requesting")
-        {
+        if (state != "requesting") {
           driversRef.child(driver.key).child("newRide").set("cancelled");
           driversRef.child(driver.key).child("newRide").onDisconnect();
           driverRequestTimeOut = 30;
           timer.cancel();
-
         }
-
 
         driverRequestTimeOut =
             driverRequestTimeOut - 1; //30-1=29-1=28 and so.on

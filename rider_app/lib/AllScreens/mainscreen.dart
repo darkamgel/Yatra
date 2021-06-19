@@ -211,8 +211,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     setState(() {
       requestrideConatinerHeight=0.0;
       rideDetailsContainerHeight=0.0;
-      bottomPaddingofMap = 300.0;
-      driverDetailsContainerHeight=320.0;
+      bottomPaddingofMap = 270.0;
+      driverDetailsContainerHeight=300.0;
     });
   }
 
@@ -923,9 +923,11 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16.0),
                   topRight: Radius.circular(16.0),
+
                 ),
                 // color:Color(0xFFB6D7BE),
-                color: Colors.white70,
+                 color: Colors.blueGrey[400],
+                // color: Color(0xFFB6D7BE),
                 boxShadow: [
                   BoxShadow(
                       spreadRadius: 0.5,
@@ -946,22 +948,37 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(rideStatus,textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20.0,fontFamily: "rand-Bold"),),
+                          style: TextStyle(fontSize: 20.0,fontFamily: "Band-Bold",fontWeight: FontWeight.w700,letterSpacing: 2,color: Colors.white),),
                       ],
                     ),
                     SizedBox(height: 22.0,),
 
                     Divider(height: 2.0,thickness: 2.0,),
+                    SizedBox(height: 10.0,),
 
-                    Text(carDetailsDriver,style: TextStyle(color: Colors.grey),),
 
-                    Text(driverName,style: TextStyle(fontSize: 20.0),),
+                    Row(
+                      children: [
+                        Icon(FontAwesomeIcons.car,color: Colors.white,size: 25,),
+                        SizedBox(width: 20,),
+                        Text(carDetailsDriver,style: TextStyle(color: Colors.white,fontSize: 20,letterSpacing: 1,fontStyle: FontStyle.italic),),
+                      ],
+                    ),
+                    SizedBox(height: 10.0,),
 
-                    SizedBox(height: 22.0,),
+                    Row(
+                      children: [
+                        Icon(Icons.person_outline,color: Colors.white,size: 30,),
+                        SizedBox(width: 20,),
+                        Text(driverName,style: TextStyle(fontSize: 20.0,color: Colors.white,letterSpacing: 1,fontWeight: FontWeight.bold),),
+                      ],
+                    ),
 
-                    Divider(),
+                    SizedBox(height: 10.0,),
 
-                    SizedBox(height: 22.0,),
+                    Divider(height: 2.0,thickness: 2.0,),
+
+                    SizedBox(height: 30.0,),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -973,15 +990,19 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               height: 55.0,
                               width: 55.0,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
-                                border: Border.all(width: 2.0,color: Colors.grey),
+                                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                                border: Border.all(width: 2.0,color: Colors.black),
                               ),
                               child:Icon(
-                                Icons.call,
+                                FontAwesomeIcons.phone,
+                                color: Colors.white,
                               ),
                             ),
                             SizedBox(height: 10.0,),
-                            Text("Call"),
+                            Padding(
+                              padding: const EdgeInsets.only(left:10),
+                              child: Text("Call",style: TextStyle(color: Colors.white,letterSpacing: 2),),
+                            ),
                           ],
                         ),
                         Column(
@@ -991,15 +1012,20 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               height: 55.0,
                               width: 55.0,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
-                                border: Border.all(width: 2.0,color: Colors.grey),
+                                borderRadius: BorderRadius.all(Radius.circular(15)),
+                                border: Border.all(width: 2.0,color: Colors.black),
                               ),
                               child:Icon(
-                                Icons.list,
+                               // Icons.list,
+                                FontAwesomeIcons.list,
+                                color: Colors.white.withOpacity(1),
                               ),
                             ),
                             SizedBox(height: 10.0,),
-                            Text("Call"),
+                            Padding(
+                              padding: const EdgeInsets.only(left:0),
+                              child: Text("Details",style: TextStyle(color: Colors.white,letterSpacing: 2),),
+                            ),
                           ],
                         ),
 
@@ -1010,15 +1036,17 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               height: 55.0,
                               width: 55.0,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
-                                border: Border.all(width: 2.0,color: Colors.grey),
+                                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                                border: Border.all(width: 2.0,color: Colors.black),
                               ),
                               child:Icon(
-                                Icons.close,
+                                 Icons.clear,
+                                color: Colors.white,
+
                               ),
                             ),
                             SizedBox(height: 10.0,),
-                            Text("Cancel"),
+                            Text("Cancel",style: TextStyle(color: Colors.white,letterSpacing: 2),),
                           ],
                         )
                       ],

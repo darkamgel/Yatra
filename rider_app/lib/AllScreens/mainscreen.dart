@@ -79,6 +79,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   StreamSubscription<Event> ridestreamSubscription;
 
+  bool isRequestingPositionDetails = false;
+
   @override
   void initState() {
     super.initState();
@@ -140,15 +142,30 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           driverphone=event.snapshot.value["driver_phone"].toString();
         });
       }
+      if(event.snapshot.value["driver_location"]!=null)
+      {
+
+          double driverLat=double.parse(event.snapshot.value["driver_location"]["latitude"].toString());
+          double driverLng=double.parse(event.snapshot.value["driver_location"]["longitude"].toString());
+          LatLng driverCurrentLocation = LatLng(driverLat,driverLng);
+          if(statusRide == "accepted")
+            {
+              updateRideTimeToPickUpLoc(driverCurrentLocation);
+            }
+          else if(statusRide == "onride")
+          {
+            updateRideTimeToDropOffLoc(driverCurrentLocation);
+          }
+          else if(statusRide == "arrived")
+          {
+            setState(() {
+              rideStatus = "Driver has Arrived. ";
+            });
+
+          }
 
 
-
-
-
-
-
-
-
+      }
       if(event.snapshot.value["status"]!=null)
         {
           statusRide=event.snapshot.value["status"].toString();
@@ -156,9 +173,70 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       if(statusRide == "accepted")
         {
           displayDriverDetailsContainer();
+          Geofire.stopListener();
+          deleteGeofireMarkers();
         }
+
     });
   }
+
+  void deleteGeofireMarkers()
+  {
+    setState(() {
+      markersSet.removeWhere((element) => element.markerId.value.contains("driver"));
+    });
+  }
+
+
+
+
+  /**************************************************************Driver to pickup location time*************************************************/
+  void updateRideTimeToPickUpLoc(LatLng driverCurrentLocation) async
+  {
+    if(isRequestingPositionDetails==false)
+      {
+        isRequestingPositionDetails=true;
+
+        var positionUserLatLng =  LatLng(currentPosition.latitude,currentPosition.longitude);
+        var details = await AssistantMethods
+            .obtainDirectionDetails(driverCurrentLocation ,positionUserLatLng);
+        if(details == null){
+          return;
+        }
+        setState(() {
+          rideStatus = "Driver on The Way - " + details.durationText;
+        });
+      }
+    isRequestingPositionDetails=false;
+
+  }
+  /**************************************************************Driver to dropoff location time*************************************************/
+  void updateRideTimeToDropOffLoc(LatLng driverCurrentLocation) async
+  {
+    if(isRequestingPositionDetails==false)
+    {
+      isRequestingPositionDetails=true;
+
+      var dropOff =  Provider.of<AppData>(context,listen: false ).dropOffLocation;
+      var dropOffUserLatLng = LatLng(dropOff.latitude,dropOff.longitude );
+
+
+
+      var details = await AssistantMethods
+          .obtainDirectionDetails(driverCurrentLocation ,dropOffUserLatLng);
+      if(details == null){
+        return;
+      }
+      setState(() {
+        rideStatus = "Reaching Destination - " + details.durationText;
+      });
+    }
+    isRequestingPositionDetails=false;
+
+  }
+
+
+
 
 //*********************reseting app after user click cancel button *******************************/
   resetApp() {

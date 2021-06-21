@@ -1,6 +1,7 @@
 import 'package:driver_app/AllScreens/newRideScreen.dart';
 import 'package:driver_app/AllScreens/registrationScreen.dart';
-import 'package:driver_app/Models/ridedDetails.dart';
+import 'package:driver_app/Assistants/assistantMethods.dart';
+import 'package:driver_app/Models/riderDetails.dart';
 import 'package:driver_app/configMaps.dart';
 import 'package:driver_app/main.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -184,6 +185,7 @@ class NotificationDialog extends StatelessWidget {
       if(theRideId == rideDetails.ride_request_id)
         {
           rideRequestRef.set("accepted");
+          AssistantMethods.disablehomeTabliveLocationUpdates();
            Navigator.push(context, MaterialPageRoute(builder: (context)=>NewRideScreen(rideDetails:rideDetails)));
         }
       else if(theRideId == "cancelled")
@@ -199,9 +201,9 @@ class NotificationDialog extends StatelessWidget {
         displayToastMessage("Ride not exist", context);
       }
 
-      
-        
-      
+
+
+
     });
   }
 

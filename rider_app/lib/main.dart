@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,8 @@ void main() async {
   runApp(MyApp());
 }
 
-DatabaseReference usersRef =
-    FirebaseDatabase.instance.reference().child("users");
+DatabaseReference usersRef = FirebaseDatabase.instance.reference().child("users");
+DatabaseReference driversRef = FirebaseDatabase.instance.reference().child("drivers");
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         // initialRoute: MainScreen.idscreen,
         //  initialRoute: MainScreen.idscreen,
-        initialRoute: LoginScreen.idscreen,
+        initialRoute: FirebaseAuth.instance.currentUser == null ? LoginScreen.idscreen : MainScreen.idscreen,
         routes: {
           RegisterationScreen.idscreen: (context) => RegisterationScreen(),
           LoginScreen.idscreen: (context) => LoginScreen(),

@@ -74,6 +74,10 @@ class PushNotificationService {
 
         String paymentMethod = dataSnapshot.value['payment_method'].toString();
 
+
+        String rider_name = dataSnapshot.value["rider_name"];
+        String rider_phone = dataSnapshot.value["rider_phone"];
+
         RideDetails rideDetails = RideDetails();
         rideDetails.ride_request_id = rideRequestId;
         rideDetails.pickup_address = pickUpAddress;
@@ -81,6 +85,8 @@ class PushNotificationService {
         rideDetails.pickup = LatLng(pickUpLocationLat, pickUpLocationLng);
         rideDetails.dropoff = LatLng(dropOffLocationLat, dropOffLocationLng);
         rideDetails.payment_method = paymentMethod;
+        rideDetails.rider_name=rider_name;
+        rideDetails.rider_phone=rider_phone;
 
         print("information::");
 

@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:rider_app/%20DataHandler/appData.dart';
 import 'package:rider_app/AllScreens/loginScreen.dart';
 import 'package:rider_app/AllScreens/searchScreen.dart';
+import 'package:rider_app/AllWidgets/CollectFareDialog.dart';
 import 'package:rider_app/AllWidgets/Divider.dart';
 import 'package:rider_app/AllWidgets/noAvailableDialog.dart';
 import 'package:rider_app/AllWidgets/progressDialog.dart';
@@ -119,7 +120,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     };
     rideRequestRef.set(riderinfoMap);
     
-    ridestreamSubscription = rideRequestRef.onValue.listen((event) {
+    ridestreamSubscription = rideRequestRef.onValue.listen((event) async{
       if(event.snapshot.value == null)
         {
           return;
@@ -176,6 +177,28 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           Geofire.stopListener();
           deleteGeofireMarkers();
         }
+
+      /******************************************************Pay Dialog Function**********************************************************************/
+      if(statusRide == "ended")
+      {
+        if(event.snapshot.value["fares"] != null)
+          {
+            int fare =int.parse(event.snapshot.value["fares"].toString());
+            var res = await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) =>CollectFareDialog(paymentMethod:"cash",fareAmount: fare,),
+            );
+            if(res == "close")
+              {
+                rideRequestRef.onDisconnect();
+                rideRequestRef = null;
+                ridestreamSubscription.cancel();
+                ridestreamSubscription=null;
+                resetApp();
+              }
+          }
+      }
 
     });
   }
@@ -250,6 +273,16 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       markersSet.clear();
       circlesSet.clear();
       pLineCoordinates.clear();
+
+      statusRide = "";
+      driverName="";
+      driverphone="";
+      carDetailsDriver="";
+      rideStatus = "Driver on The Way";
+      driverDetailsContainerHeight = 0.0;
+
+
+
     });
     locatePosition();
   }

@@ -41,65 +41,67 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: tabController,
-        children: [
-          HomeTabPage(),
-          EarningsTabPage(),
-          RatingTabPage(),
-          ProfileTabPage(),
-        ],
-      ),
-
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //         icon: Icon(Icons.home),
-      //         label: "Home",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.credit_card),
-      //       label: "Earnings",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.star),
-      //       label: "Ratings",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: "Account",
-      //     ),
-      //   ],
-      //   unselectedItemColor: Colors.black54,
-      //   selectedItemColor: Colors.yellow,
-      //   type: BottomNavigationBarType.fixed,
-      //   selectedLabelStyle: TextStyle(fontSize: 12.0),
-      //   showUnselectedLabels: true,
-      //   currentIndex: selectedIndex,
-      //   onTap: onItemClicked,
-      // ),
-
-      bottomNavigationBar: CurvedNavigationBar(
-        height: 65,
-        color: Colors.blue.shade600,
-        backgroundColor: Color(0xFFB6D7BE),
-        buttonBackgroundColor: Color(0xFFA2C5AC),
-        items: <Widget>[
-
-          Icon(Icons.home,size: 25,color: Colors.black,),
-          Icon(Icons.credit_card,size: 25,color: Colors.black,),
-          Icon(Icons.star,size: 25,color: Colors.black,),
-          Icon(Icons.person,size: 25,color: Colors.black,),
-
-        ],
-        animationDuration: Duration(
-          milliseconds: 200,
+    return SafeArea(
+      child: Scaffold(
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: tabController,
+          children: [
+            HomeTabPage(),
+            EarningsTabPage(),
+            RatingTabPage(),
+            ProfileTabPage(),
+          ],
         ),
-        animationCurve: Curves.bounceInOut,
 
-        onTap: onItemClicked,
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //         icon: Icon(Icons.home),
+        //         label: "Home",
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.credit_card),
+        //       label: "Earnings",
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.star),
+        //       label: "Ratings",
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.person),
+        //       label: "Account",
+        //     ),
+        //   ],
+        //   unselectedItemColor: Colors.black54,
+        //   selectedItemColor: Colors.yellow,
+        //   type: BottomNavigationBarType.fixed,
+        //   selectedLabelStyle: TextStyle(fontSize: 12.0),
+        //   showUnselectedLabels: true,
+        //   currentIndex: selectedIndex,
+        //   onTap: onItemClicked,
+        // ),
+
+        bottomNavigationBar: CurvedNavigationBar(
+          height: 65,
+          color: Colors.blue.shade600,
+          backgroundColor: Color(0xFFB6D7BE),
+          buttonBackgroundColor: Color(0xFFA2C5AC),
+          items: <Widget>[
+
+            Icon(Icons.home,size: 25,color: Colors.black,),
+            Icon(Icons.credit_card,size: 25,color: Colors.black,),
+            Icon(Icons.star,size: 25,color: Colors.black,),
+            Icon(Icons.person,size: 25,color: Colors.black,),
+
+          ],
+          animationDuration: Duration(
+            milliseconds: 200,
+          ),
+          animationCurve: Curves.bounceInOut,
+
+          onTap: onItemClicked,
+        ),
       ),
     );
   }

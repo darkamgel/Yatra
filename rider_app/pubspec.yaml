@@ -40,6 +40,10 @@ dependencies:
   email_auth:
   animated_text_kit:
   flutter_polyline_points:
+  font_awesome_flutter:
+  flutter_geofire:
+  image_picker:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:

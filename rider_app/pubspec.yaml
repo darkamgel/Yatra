@@ -44,6 +44,7 @@ dependencies:
   flutter_geofire:
   image_picker:
   url_launcher:
+  smooth_star_rating:
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,9 @@ flutter:
     - images/yatra_logo.png
     - images/background.png
     - images/background2.jpg
+    - images/uberx.png
+    - images/ubergo.png
+    - images/bike.png
 
 
 

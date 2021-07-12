@@ -37,7 +37,7 @@ class NoDriverAvailableDialog extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'No Drivers found Nearby , please try again shortly',
+                    'Sorry !! No Drivers found Nearby , please try again shortly',
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -47,11 +47,14 @@ class NoDriverAvailableDialog extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
                       onPressed:(){
                         Navigator.pop(context);
 
                       },
-                    color: Theme.of(context).accentColor,
+                    color: Colors.green,
                     child: Padding(
                       padding: EdgeInsets.all(17.0),
                       child: Row(

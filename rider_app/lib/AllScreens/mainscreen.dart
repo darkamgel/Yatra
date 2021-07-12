@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:rider_app/%20DataHandler/appData.dart';
 import 'package:rider_app/AllScreens/loginScreen.dart';
 import 'package:rider_app/AllScreens/ratingScreen.dart';
+import 'package:rider_app/AllScreens/registrationScreen.dart';
 import 'package:rider_app/AllScreens/searchScreen.dart';
 import 'package:rider_app/AllWidgets/CollectFareDialog.dart';
 import 'package:rider_app/AllWidgets/Divider.dart';
@@ -327,8 +328,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     await getPlaceDirection();
     setState(() {
       searchContainerHeight = 0;
-      rideDetailsContainerHeight = 240;
-      bottomPaddingofMap = 230.0;
+      rideDetailsContainerHeight = 340;
+      bottomPaddingofMap = 360.0;
       drawerOpen = false;
     });
   }
@@ -785,7 +786,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 child: Container(
                   height: rideDetailsContainerHeight,
                   decoration: BoxDecoration(
-                    color: Colors.blueGrey[400],
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16.0),
                       topRight: Radius.circular(16.0),
@@ -799,68 +800,247 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
+
+        /******************************different vehhicel details***************************************************************************/
+
+
+
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 17.0),
                     child: Column(
                       children: [
-                        Container(
-                          width: double.infinity,
-                          color: Colors.blueGrey,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  "images/taxi.png",
-                                  height: 70.0,
-                                  width: 80.0,
-                                ),
-                                SizedBox(
-                                  width: 16.0,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Car",
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontFamily: "Brand-Bold",
-                                          color: Colors.white,
-                                          letterSpacing: 2),
-                                    ),
-                                    Text(
-                                      ((tripDirectionDetails != null)
-                                          ? tripDirectionDetails.distanceText
-                                          : ''),
-                                      style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontFamily: "Brand-Bold",
-                                          color: Colors.white,
-                                          letterSpacing: 2),
-                                    ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: Container(),
-                                ),
-                                Text(
-                                  ((tripDirectionDetails != null)
-                                      ? 'Rs.${AssistantMethods.calculatefares(tripDirectionDetails)}'
-                                      : ''),
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontFamily: "Brand-Bold",
-                                      color: Colors.white,
-                                      letterSpacing: 2),
-                                ),
-                              ],
+                        //bike
+                        GestureDetector(
+                          onTap: (){
+                            displayToastMessage("Searching Bike ...", context);
+
+                            setState(() {
+                              state = "requesting";
+                            });
+
+                            displayRequestRideContainer();
+                            availableDrivers =
+                                GeoFireAssistant.nearbyAvailableDriversList;
+                            searchNearestDriver();
+
+                          },
+                          child: Container(
+                            width: double.infinity,
+
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    "images/bike.png",
+                                    height: 70.0,
+                                    width: 80.0,
+                                  ),
+                                  SizedBox(
+                                    width: 16.0,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Bike",
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontFamily: "Brand-Bold",
+                                            color: Colors.black,
+                                            letterSpacing: 2),
+                                      ),
+                                      Text(
+                                        ((tripDirectionDetails != null)
+                                            ? tripDirectionDetails.distanceText
+                                            : ''),
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: "Brand-Bold",
+                                            color: Colors.black,
+                                            letterSpacing: 2),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: Container(),
+                                  ),
+                                  Text(
+                                    ((tripDirectionDetails != null)
+                                        ? 'Rs.${AssistantMethods.calculatefares(tripDirectionDetails)}'
+                                        : ''),
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontFamily: "Brand-Bold",
+                                        color: Colors.black,
+                                        letterSpacing: 2),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 20.0,
+                        SizedBox(height: 10.0,),
+                        Divider(height: 2.0,thickness: 2.0, color: Colors.yellow,),
+                        SizedBox(height: 10.0,),
+
+
+                        // Ubergo
+                        GestureDetector(
+                          onTap: (){
+                            displayToastMessage("Searching Uber-Go ...", context);
+
+                            setState(() {
+                              state = "requesting";
+                            });
+
+                            displayRequestRideContainer();
+                            availableDrivers =
+                                GeoFireAssistant.nearbyAvailableDriversList;
+                            searchNearestDriver();
+
+                          },
+                          child: Container(
+                            width: double.infinity,
+
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    "images/ubergo.png",
+                                    height: 70.0,
+                                    width: 80.0,
+                                  ),
+                                  SizedBox(
+                                    width: 16.0,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Uber-go",
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontFamily: "Brand-Bold",
+                                            color: Colors.black,
+                                            letterSpacing: 2),
+                                      ),
+                                      Text(
+                                        ((tripDirectionDetails != null)
+                                            ? tripDirectionDetails.distanceText
+                                            : ''),
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: "Brand-Bold",
+                                            color: Colors.black,
+                                            letterSpacing: 2),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: Container(),
+                                  ),
+                                  Text(
+                                    ((tripDirectionDetails != null)
+                                        ? 'Rs.${AssistantMethods.calculatefares(tripDirectionDetails)}'
+                                        : ''),
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontFamily: "Brand-Bold",
+                                        color: Colors.black,
+                                        letterSpacing: 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
+                        SizedBox(height: 10.0,),
+                        Divider(height: 2.0,thickness: 2.0, color: Colors.yellow,),
+                        SizedBox(height: 10.0,),
+
+
+                            //Uberx
+                        GestureDetector(
+                          onTap: (){
+                            displayToastMessage("Searching Uber-X ...", context);
+
+                            setState(() {
+                              state = "requesting";
+                            });
+
+                            displayRequestRideContainer();
+                            availableDrivers =
+                                GeoFireAssistant.nearbyAvailableDriversList;
+                            searchNearestDriver();
+
+
+                          },
+                          child: Container(
+                            width: double.infinity,
+
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    "images/uberx.png",
+                                    height: 70.0,
+                                    width: 80.0,
+                                  ),
+                                  SizedBox(
+                                    width: 16.0,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Uber-X",
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontFamily: "Brand-Bold",
+                                            color: Colors.black,
+                                            letterSpacing: 2),
+                                      ),
+                                      Text(
+                                        ((tripDirectionDetails != null)
+                                            ? tripDirectionDetails.distanceText
+                                            : ''),
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: "Brand-Bold",
+                                            color: Colors.black,
+                                            letterSpacing: 2),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: Container(),
+                                  ),
+                                  Text(
+                                    ((tripDirectionDetails != null)
+                                        ? 'Rs.${AssistantMethods.calculatefares(tripDirectionDetails)}'
+                                        : ''),
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontFamily: "Brand-Bold",
+                                        color: Colors.black,
+                                        letterSpacing: 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.0,),
+                        Divider(height: 2.0,thickness: 2.0, color: Colors.yellow,),
+                        SizedBox(height: 10.0,),
+
+
+
+
+
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),
                           child: Row(
@@ -868,7 +1048,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               Icon(
                                 FontAwesomeIcons.moneyCheckAlt,
                                 size: 18.0,
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                               SizedBox(
                                 width: 16.0,
@@ -876,61 +1056,21 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               Text(
                                 "Cash",
                                 style: TextStyle(
-                                    color: Colors.white, letterSpacing: 1),
+                                    color: Colors.black, letterSpacing: 1),
                               ),
                               SizedBox(
                                 width: 6.0,
                               ),
                               Icon(
                                 Icons.keyboard_arrow_down,
-                                color: Colors.white,
+                                color: Colors.black,
                                 size: 16.0,
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 24.0,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: RaisedButton(
-                            onPressed: () {
-                              setState(() {
-                                state = "requesting";
-                              });
 
-                              displayRequestRideContainer();
-                              availableDrivers =
-                                  GeoFireAssistant.nearbyAvailableDriversList;
-                              searchNearestDriver();
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(14.0),
-                            ),
-                            color: Theme.of(context).accentColor,
-                            child: Padding(
-                              padding: EdgeInsets.all(17.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Request",
-                                    style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
-                                  Icon(
-                                    FontAwesomeIcons.taxi,
-                                    color: Colors.white,
-                                    size: 26.0,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),

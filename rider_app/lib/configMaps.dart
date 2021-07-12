@@ -13,4 +13,7 @@ String carDetailsDriver="";
 String driverName="";
 String driverphone="";
 
+double starCounter = 0.0;
+String title ="";
+
 String serverToken = "key=Your token from firebase"

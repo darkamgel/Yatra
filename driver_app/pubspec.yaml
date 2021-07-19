@@ -32,6 +32,8 @@ dependencies:
   firebase_messaging:
   assets_audio_player:
   maps_toolkit:
+  intl:
+  smooth_star_rating:
 
 dev_dependencies:
   flutter_test:

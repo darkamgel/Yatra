@@ -72,6 +72,12 @@ class AssistantMethods {
 
   static void retrieveHistoryInfo(context)
   {
+
+
+
+
+
+
     //retrieve and display Earnings
     driversRef.child(currentfirebaseUser.uid).child("earnings").once().then((DataSnapshot dataSnapshot)
     {

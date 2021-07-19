@@ -1,4 +1,5 @@
 import 'package:driver_app/Assistants/assistantMethods.dart';
+import 'package:driver_app/configMaps.dart';
 import 'package:flutter/material.dart';
 
 class CollectFareDialog extends StatelessWidget {
@@ -26,7 +27,7 @@ class CollectFareDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 22.0,),
-            Text("Trip Fare"),
+            Text("Trip Fare(" + rideType.toUpperCase() + ")",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w900),),
 
             SizedBox(height: 22.0,),
 
@@ -48,6 +49,9 @@ class CollectFareDialog extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
                   onPressed: ()async{
                     Navigator.pop(context);
                     Navigator.pop(context);
@@ -55,7 +59,7 @@ class CollectFareDialog extends StatelessWidget {
                     AssistantMethods.enablehomeTabliveLocationUpdates();
 
                   },
-                color: Colors.deepPurpleAccent,
+                color: Colors.green,
                 child: Padding(
                   padding: const EdgeInsets.all(17.0),
                   child: Row(

@@ -82,6 +82,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
     AssistantMethods.retrieveHistoryInfo(context);
     getRatings();
+    getRideType();
   }
 
   @override
@@ -188,6 +189,19 @@ class _HomeTabPageState extends State<HomeTabPage> {
     rideRequestRef.set("searching");
 
     rideRequestRef.onValue.listen((event) {});
+  }
+
+  getRideType(){
+    driversRef.child(currentfirebaseUser.uid).child("car_details")
+    .child("type").once().then((DataSnapshot snapshot){
+      if(snapshot.value != null)
+        {
+          setState(() {
+            rideType = snapshot.value.toString();
+          });
+        }
+
+    });
   }
 
   getRatings(){

@@ -50,7 +50,26 @@ class AssistantMethods {
 
    double totalLocalAmount =  totalFareAmount * 120;
 
-   return totalLocalAmount.truncate();
+   if (rideType == "uber-x")
+     {
+       double result = (totalLocalAmount.truncate()) * 2.0;
+       return result.truncate();
+     }
+   else if (rideType == "uber-go")
+     {
+       return totalLocalAmount.truncate();
+     }
+   else if (rideType == "bike")
+   {
+     double result = (totalLocalAmount.truncate()) / 2.0;
+     return result.truncate();
+   }
+   else{
+     return totalLocalAmount.truncate();
+
+   }
+
+
 
   }
 
@@ -72,12 +91,6 @@ class AssistantMethods {
 
   static void retrieveHistoryInfo(context)
   {
-
-
-
-
-
-
     //retrieve and display Earnings
     driversRef.child(currentfirebaseUser.uid).child("earnings").once().then((DataSnapshot dataSnapshot)
     {

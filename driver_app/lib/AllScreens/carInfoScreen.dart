@@ -14,6 +14,9 @@ class CarInfoScreen extends StatelessWidget {
   TextEditingController carNumberTextEditingController = TextEditingController();
   TextEditingController carColorTextEditingController = TextEditingController();
 
+  String selectedCarType;
+  List<String> carTypesList = ["uber-x","uber-go","bike"];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,6 +153,25 @@ class CarInfoScreen extends StatelessWidget {
 
                     SizedBox(height: 20.0,),
 
+                    DropdownButton(
+                      iconSize: 40,
+                      iconEnabledColor: Colors.white,
+                      hint: Text("Please choose car Type",style: TextStyle(color: Colors.white),),
+                      value: selectedCarType,
+                      onChanged: (newValue){
+                        selectedCarType = newValue;
+                        displayToastMessage(selectedCarType, context);
+                      },
+                      items: carTypesList.map((car){
+                        return DropdownMenuItem(
+                          child: Text(car),
+                          value: car,
+                        );
+
+                      }).toList(),
+                    ),
+                    SizedBox(height: 20.0,),
+
 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -182,7 +204,14 @@ class CarInfoScreen extends StatelessWidget {
                               displayToastMessage("Please Enter Valid Car Number", context);
                             }else if(carColorTextEditingController.text.isEmpty){
                               displayToastMessage("Please Enter Valid Car Color", context);
-                            }else{
+                            }
+                            else if(selectedCarType == null){
+                              displayToastMessage("Please choose your car type", context);
+                            }
+
+
+
+                            else{
                               saveDriverCarInfo(context);
                             }
 
@@ -222,6 +251,7 @@ class CarInfoScreen extends StatelessWidget {
       "car_color":carColorTextEditingController.text,
       "car_number":carNumberTextEditingController.text,
       "car_model":carModelTextEditingController.text,
+      "type":selectedCarType,
     };
 
     

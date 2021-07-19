@@ -15,5 +15,6 @@ String driverphone="";
 
 double starCounter = 0.0;
 String title ="";
+String carRideType = "";
 
 String serverToken = "key=Your token from firebase"

@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:driver_app/Assistants/resquestAssitant.dart';
 import 'package:driver_app/Models/directionDetails.dart';
 import 'package:driver_app/configMaps.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AssistantMethods {
@@ -71,68 +72,59 @@ class AssistantMethods {
 
   static void retrieveHistoryInfo(context)
   {
-    /***********************************************retrieve and display earnings************************************************/
-    driversRef.child(currentfirebaseUser.uid).child("earnings")
-        .once().then((DataSnapshot dataSnapshot){
-           if(dataSnapshot.value != null)
-            {
-              String earnings = dataSnapshot.value.toString();
-              Provider.of<AppData>(context,listen: false)
-                  .updateEarnings(earnings);
-            }
+    //retrieve and display Earnings
+    driversRef.child(currentfirebaseUser.uid).child("earnings").once().then((DataSnapshot dataSnapshot)
+    {
+      if(dataSnapshot.value != null)
+      {
+        String earnings = dataSnapshot.value.toString();
+        Provider.of<AppData>(context, listen: false).updateEarnings(earnings);
+      }
     });
 
     /***********************************************retrieve and display Trip History************************************************/
-    driversRef.child(currentfirebaseUser.uid).child("history")
-        .once().then((DataSnapshot dataSnapshot){
+    //retrieve and display Trip History
+    driversRef.child(currentfirebaseUser.uid).child("history").once().then((DataSnapshot dataSnapshot)
+    {
       if(dataSnapshot.value != null)
       {
         //update total number of trip counts to provider
-        Map<dynamic,dynamic> keys = dataSnapshot.value;
+        Map<dynamic, dynamic> keys = dataSnapshot.value;
         int tripCounter = keys.length;
-        Provider.of<AppData>(context,listen: false)
-            .updateTripsCounter(tripCounter);
+        Provider.of<AppData>(context, listen: false).updateTripsCounter(tripCounter);
+
         //update trip keys to provider
         List<String> tripHistoryKeys = [];
         keys.forEach((key, value) {
           tripHistoryKeys.add(key);
         });
-        Provider.of<AppData>(context,listen: false).updateTripKeys(tripHistoryKeys);
-
-
-
+        Provider.of<AppData>(context, listen: false).updateTripKeys(tripHistoryKeys);
+        obtainTripRequestsHistoryData(context);
       }
     });
-
   }
 
-  static void obtainTripRequestHistoryData(context)
+  static void obtainTripRequestsHistoryData(context)
   {
-    var keys = Provider.of<AppData>(context,listen: false).tripHistoryKeys;
-
+    var keys = Provider.of<AppData>(context, listen: false).tripHistoryKeys;
 
     for(String key in keys)
-      {
-        newRequestsRef.child(key).once().then((DataSnapshot snapshot){
-          if(snapshot.value!=null)
-            {
-              var history = History.fromSnapshot(snapshot);
-              Provider.of<AppData>(context,listen: false)
-                  .updateTripHistoryData(history);
-            }
-
-        });
-
-      }
-
-
-
-
+    {
+      newRequestsRef.child(key).once().then((DataSnapshot snapshot) {
+        if(snapshot.value != null)
+        {
+          var history = History.fromSnapshot(snapshot);
+          Provider.of<AppData>(context, listen: false).updateTripHistoryData(history);
+        }
+      });
+    }
   }
 
+  static String formatTripDate(String date)
+  {
+    DateTime dateTime = DateTime.parse(date);
+    String formattedDate = "${DateFormat.MMMd().format(dateTime)}, ${DateFormat.y().format(dateTime)} - ${DateFormat.jm().format(dateTime)}";
 
-
-
-
-
+    return formattedDate;
+  }
 }

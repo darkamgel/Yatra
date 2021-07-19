@@ -5,11 +5,16 @@ import 'package:driver_app/Models/allUsers.dart';
 
 String mapKey = "your key";
 
-User firebaseUser;
-User currentfirebaseUser;
 StreamSubscription<Position> homeTabPageStreamSubscription;
 StreamSubscription<Position> rideStreamSubscription;
+
+User firebaseUser;
+User currentfirebaseUser;
 
 Users userCurrentInfo;
 final assetsAudioPlayer = AssetsAudioPlayer();
 Position currentPosition;
+
+Drivers driversInformation;
+
+String title = "";

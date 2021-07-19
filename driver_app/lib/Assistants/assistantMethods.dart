@@ -1,4 +1,5 @@
 import 'package:driver_app/DataHandler/appData.dart';
+import 'package:driver_app/Models/history.dart';
 import 'package:driver_app/main.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
@@ -32,9 +33,6 @@ class AssistantMethods {
 
 
     return directionDetails;
-
-
-
 
   }
 
@@ -73,6 +71,7 @@ class AssistantMethods {
 
   static void retrieveHistoryInfo(context)
   {
+    /***********************************************retrieve and display earnings************************************************/
     driversRef.child(currentfirebaseUser.uid).child("earnings")
         .once().then((DataSnapshot dataSnapshot){
            if(dataSnapshot.value != null)
@@ -82,6 +81,52 @@ class AssistantMethods {
                   .updateEarnings(earnings);
             }
     });
+
+    /***********************************************retrieve and display Trip History************************************************/
+    driversRef.child(currentfirebaseUser.uid).child("history")
+        .once().then((DataSnapshot dataSnapshot){
+      if(dataSnapshot.value != null)
+      {
+        //update total number of trip counts to provider
+        Map<dynamic,dynamic> keys = dataSnapshot.value;
+        int tripCounter = keys.length;
+        Provider.of<AppData>(context,listen: false)
+            .updateTripsCounter(tripCounter);
+        //update trip keys to provider
+        List<String> tripHistoryKeys = [];
+        keys.forEach((key, value) {
+          tripHistoryKeys.add(key);
+        });
+        Provider.of<AppData>(context,listen: false).updateTripKeys(tripHistoryKeys);
+
+
+
+      }
+    });
+
+  }
+
+  static void obtainTripRequestHistoryData(context)
+  {
+    var keys = Provider.of<AppData>(context,listen: false).tripHistoryKeys;
+
+
+    for(String key in keys)
+      {
+        newRequestsRef.child(key).once().then((DataSnapshot snapshot){
+          if(snapshot.value!=null)
+            {
+              var history = History.fromSnapshot(snapshot);
+              Provider.of<AppData>(context,listen: false)
+                  .updateTripHistoryData(history);
+            }
+
+        });
+
+      }
+
+
+
 
   }
 

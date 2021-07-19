@@ -16,7 +16,7 @@ class EarningsTabPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 70),
             child: Column(
               children: [
-                Text("Total Earnings",style: TextStyle(color: Colors.white),),
+                Text("Total Earnings",style: TextStyle(color: Colors.white,letterSpacing: 1),),
                 Text("Rs.${Provider.of<AppData>(context,listen: false).earnings}",
                   style: TextStyle(color: Colors.white,fontSize: 50,fontFamily: 'BrandBold'),)
               ],
@@ -38,7 +38,8 @@ class EarningsTabPage extends StatelessWidget {
                   SizedBox(width: 16,),
                   Text('Total Trips',style: TextStyle(fontSize: 16),),
                   Expanded(child: Container(
-                    child: Text("5",textAlign: TextAlign.end,
+                    child: Text(Provider.of<AppData>(context,listen:false).countTrips.toString(),
+                        textAlign: TextAlign.end,
                       style: TextStyle(fontSize: 18),),))
                 ],
 

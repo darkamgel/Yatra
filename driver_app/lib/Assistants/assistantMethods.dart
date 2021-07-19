@@ -1,8 +1,12 @@
+import 'package:driver_app/DataHandler/appData.dart';
+import 'package:driver_app/main.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:driver_app/Assistants/resquestAssitant.dart';
 import 'package:driver_app/Models/directionDetails.dart';
 import 'package:driver_app/configMaps.dart';
+import 'package:provider/provider.dart';
 
 class AssistantMethods {
 
@@ -64,6 +68,20 @@ class AssistantMethods {
   {
     homeTabPageStreamSubscription.resume();
     Geofire.setLocation(currentfirebaseUser.uid, currentPosition.latitude, currentPosition.longitude);
+
+  }
+
+  static void retrieveHistoryInfo(context)
+  {
+    driversRef.child(currentfirebaseUser.uid).child("earnings")
+        .once().then((DataSnapshot dataSnapshot){
+           if(dataSnapshot.value != null)
+            {
+              String earnings = dataSnapshot.value.toString();
+              Provider.of<AppData>(context,listen: false)
+                  .updateEarnings(earnings);
+            }
+    });
 
   }
 

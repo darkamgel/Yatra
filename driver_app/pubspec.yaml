@@ -31,6 +31,7 @@ dependencies:
   flutter_geofire:
   firebase_messaging:
   assets_audio_player:
+  maps_toolkit:
 
 dev_dependencies:
   flutter_test:
@@ -48,8 +49,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - images/car_android.png
-    - images/car_ios.png
+    - images/car-android.png
+    - images/car-ios.png
     - images/desticon.png
     - images/desticon1.png
     - images/logo.png
@@ -62,6 +63,9 @@ flutter:
     - images/yatra_logo.png
     - images/background.png
     - images/background2.jpg
+    - images/uberx.png
+    - images/ubergo.png
+    - images/bike.png
     - sounds/alert.mp3
 
   fonts:

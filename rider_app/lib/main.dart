@@ -4,11 +4,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rider_app/%20DataHandler/appData.dart';
+import 'package:rider_app/AllScreens/aboutScreen.dart';
 import 'package:rider_app/AllScreens/loginScreen.dart';
 import 'package:rider_app/AllScreens/mainscreen.dart';
 import 'package:rider_app/AllScreens/registrationScreen.dart';
 
 import 'AllScreens/forgot_pw_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,7 @@ void main() async {
 
 DatabaseReference usersRef = FirebaseDatabase.instance.reference().child("users");
 DatabaseReference driversRef = FirebaseDatabase.instance.reference().child("drivers");
+DatabaseReference newRequestsRef = FirebaseDatabase.instance.reference().child("Ride Requests");
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -33,12 +36,15 @@ class MyApp extends StatelessWidget {
         ),
         // initialRoute: MainScreen.idscreen,
         //  initialRoute: MainScreen.idscreen,
-        initialRoute: FirebaseAuth.instance.currentUser == null ? LoginScreen.idscreen : MainScreen.idscreen,
+         initialRoute: FirebaseAuth.instance.currentUser == null ? LoginScreen.idscreen : MainScreen.idscreen,
+
         routes: {
           RegisterationScreen.idscreen: (context) => RegisterationScreen(),
           LoginScreen.idscreen: (context) => LoginScreen(),
           MainScreen.idscreen: (context) => MainScreen(),
           ForgotPassword.idscreen:(context)=>ForgotPassword(),
+          AboutScreen.idScreen:(context)=>AboutScreen()
+
 
         },
         // debugShowCheckedModeBanner: false,

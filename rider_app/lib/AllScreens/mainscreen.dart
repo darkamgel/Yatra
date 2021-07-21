@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:animated_text_kit/animated_text_kit.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rider_app/%20DataHandler/appData.dart';
+import 'package:rider_app/AllScreens/Calculator.dart';
+import 'package:rider_app/AllScreens/HistoryScreen.dart';
+import 'package:rider_app/AllScreens/aboutScreen.dart';
 import 'package:rider_app/AllScreens/loginScreen.dart';
+import 'package:rider_app/AllScreens/profileTabPage.dart';
 import 'package:rider_app/AllScreens/ratingScreen.dart';
 import 'package:rider_app/AllScreens/registrationScreen.dart';
 import 'package:rider_app/AllScreens/searchScreen.dart';
@@ -369,6 +374,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     initGeoFireListner();
 
     uName = userCurrentInfo.name;
+    
+    AssistantMethods.retrieveHistoryInfo(context);
   }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -457,15 +464,22 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   ),
                   //Drawer body button
 
-                  ListTile(
-                    leading: Icon(
-                      Icons.history,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      "History",
-                      style: TextStyle(
-                          fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                  GestureDetector(
+                    onTap: (){
+
+
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=> HistoryScreen()));
+                    },
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.history,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        "History",
+                        style: TextStyle(
+                            fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                      ),
                     ),
                   ),
                   ListTile(
@@ -473,23 +487,73 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       Icons.person,
                       color: Colors.white,
                     ),
-                    title: Text(
-                      "Profile",
-                      style: TextStyle(
-                          fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                    title: GestureDetector(
+                      onTap: (){
+
+
+                        Navigator.push(context,MaterialPageRoute(builder: (context)=> ProfileTabPage()));
+                      },
+
+
+                      child: GestureDetector(
+                        onTap: (){
+
+
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=> ProfileTabPage()));
+                        },
+                        child: Text(
+                          "Profile",
+                          style: TextStyle(
+                              fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                        ),
+                      ),
                     ),
                   ),
+                  GestureDetector(
+                    onTap: (){
+
+
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, AboutScreen.idScreen, (route) => false);
+                    },
+
+
+
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.info,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        "About",
+                        style: TextStyle(
+                            fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                      ),
+                    ),
+                  ),
+
                   ListTile(
                     leading: Icon(
-                      Icons.info,
+                      Icons.calculate,
                       color: Colors.white,
                     ),
-                    title: Text(
-                      "About",
-                      style: TextStyle(
-                          fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                    title: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context,MaterialPageRoute(builder: (context)=> BillSplitter()));
+
+                      },
+                      child: Text(
+                        "Calculator",
+                        style: TextStyle(
+                            fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                      ),
                     ),
                   ),
+
+
+
+
+
                   GestureDetector(
                     onTap: () {
                       FirebaseAuth.instance.signOut();
@@ -627,7 +691,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         children: [
                           SizedBox(height: 6.0),
                           Text(
-                            "Hi There",
+                            "Hi ${uName}".toUpperCase(),
                             // "hi ${userCurrentInfo.name ?? "There"}",
 
                             style: TextStyle(
@@ -1613,4 +1677,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       });
     });
   }
+
+
+
 }

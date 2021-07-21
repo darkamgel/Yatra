@@ -45,6 +45,9 @@ dependencies:
   image_picker:
   url_launcher:
   smooth_star_rating:
+  firebase_storage:
+  intl:
+
 
 dev_dependencies:
   flutter_test:

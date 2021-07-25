@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:rider_app/%20DataHandler/appData.dart';
 import 'package:rider_app/AllScreens/Calculator.dart';
 import 'package:rider_app/AllScreens/HistoryScreen.dart';
+import 'package:rider_app/AllScreens/Reminder.dart';
 import 'package:rider_app/AllScreens/aboutScreen.dart';
 import 'package:rider_app/AllScreens/loginScreen.dart';
 import 'package:rider_app/AllScreens/profileTabPage.dart';
@@ -394,7 +395,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           width: 255.0,
           child: Drawer(
             child: Container(
-              color: Colors.blueGrey[600],
+              color: Colors.white,
               child: ListView(
                 children: [
                   //header of drawer
@@ -402,7 +403,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     height: 165.0,
                     child: DrawerHeader(
                       decoration: BoxDecoration(
-                        color: Colors.blueGrey[600],
+                        color: Colors.blue,
                       ),
                       child: Row(
                         children: [
@@ -457,7 +458,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   ),
 
                   Divider(
-                    color: Colors.white,
+                    color: Colors.yellow,
+                    height: 2,
                   ),
                   SizedBox(
                     height: 5.0,
@@ -473,19 +475,19 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     child: ListTile(
                       leading: Icon(
                         Icons.history,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       title: Text(
                         "History",
                         style: TextStyle(
-                            fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                            fontSize: 17.0, color: Colors.black, letterSpacing: 2),
                       ),
                     ),
                   ),
                   ListTile(
                     leading: Icon(
                       Icons.person,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                     title: GestureDetector(
                       onTap: (){
@@ -499,12 +501,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         onTap: (){
 
 
+
                           Navigator.push(context,MaterialPageRoute(builder: (context)=> ProfileTabPage()));
                         },
                         child: Text(
                           "Profile",
                           style: TextStyle(
-                              fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                              fontSize: 17.0, color: Colors.black, letterSpacing: 2),
                         ),
                       ),
                     ),
@@ -522,12 +525,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     child: ListTile(
                       leading: Icon(
                         Icons.info,
-                        color: Colors.white,
+                        color: Colors.pink.shade900,
                       ),
                       title: Text(
                         "About",
                         style: TextStyle(
-                            fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                            fontSize: 17.0, color: Colors.black, letterSpacing: 2),
                       ),
                     ),
                   ),
@@ -535,7 +538,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   ListTile(
                     leading: Icon(
                       Icons.calculate,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                     title: GestureDetector(
                       onTap: (){
@@ -545,7 +548,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       child: Text(
                         "Calculator",
                         style: TextStyle(
-                            fontSize: 17.0, color: Colors.white, letterSpacing: 2),
+                            fontSize: 17.0, color: Colors.black, letterSpacing: 2),
                       ),
                     ),
                   ),
@@ -559,17 +562,19 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       FirebaseAuth.instance.signOut();
                       Navigator.pushNamedAndRemoveUntil(
                           context, LoginScreen.idscreen, (route) => false);
+                      //  Navigator.push(context,MaterialPageRoute(builder: (context)=> AddReminder()));
+
                     },
                     child: ListTile(
                       leading: Icon(
                         Icons.logout,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       title: Text(
                         "Log Out",
                         style: TextStyle(
                             fontSize: 17.0,
-                            color: Colors.white,
+                            color: Colors.black,
                             letterSpacing: 2),
                       ),
                     ),
@@ -707,7 +712,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 fontFamily: "Brand-Bold",
                                 color: Colors.black),
                           ),
-                          SizedBox(height: 20.0),
+                          SizedBox(height: 30.0),
                           GestureDetector(
                             onTap: () async {
                               var res = await Navigator.push(
@@ -754,7 +759,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             ),
                           ),
                           SizedBox(
-                            height: 24.0,
+                            height: 40.0,
                           ),
                           Row(
                             children: [
@@ -795,44 +800,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             ],
                           ),
                           SizedBox(
-                            height: 10.0,
+                            height: 25.0,
                           ),
                           DividerWidget(),
                           SizedBox(
                             height: 16.0,
                           ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.work,
-                                color: Colors.black,
-                              ),
-                              SizedBox(
-                                width: 12.0,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Add Work",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w900),
-                                  ),
-                                  SizedBox(
-                                    height: 4.0,
-                                  ),
-                                  Text(
-                                    "Office Location",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+
                         ],
                       ),
                     ),

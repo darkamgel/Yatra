@@ -6,6 +6,7 @@ import 'package:rider_app/AllScreens/registrationScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rider_app/AllWidgets/progressDialog.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:rider_app/Refractor/refractor_1.dart';
 
 import '../main.dart';
 import 'mainscreen.dart';
@@ -69,50 +70,18 @@ class LoginScreen extends StatelessWidget {
                       height: 1.0,
                     ),
 
-                    TextField(
-                      controller: emailTextEditingController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        fillColor: Colors.grey[500].withOpacity(0.5),
-                        filled: true,
+                    inputTextField(
+                        Controller: emailTextEditingController,
 
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        //paxi add gareko
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 20.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1.0),
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        ),
-
-                        ///yeta samma
-
-                        labelText: "Email",
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                        hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 20.0),
-                      ),
-                      style: TextStyle(fontSize: 20.0, color: Colors.white),
-                    ),
+                        Icons: Icons.email,
+                        text: "Email"),
 
                     //for entering password
                     SizedBox(
                       height: 15.0,
                     ),
+
+                    ///password
                     TextField(
                       controller: passwordTextEditingController,
                       obscureText: true,
@@ -139,9 +108,7 @@ class LoginScreen extends StatelessWidget {
                           borderSide: BorderSide(width: 2.0),
                           borderRadius: BorderRadius.all(Radius.circular(16.0)),
                         ),
-
                         ///yeta samma
-
                         labelText: "Password",
                         labelStyle: TextStyle(
                           color: Colors.white,
@@ -154,18 +121,19 @@ class LoginScreen extends StatelessWidget {
                       ),
                       style: TextStyle(fontSize: 20.0, color: Colors.white),
                     ),
+
+
+
                     SizedBox(
                       height: 10,
                     ),
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(context,
-                              ForgotPassword.idscreen, (route) => false);
-                        },
-                        child: Text(
-                          "Forgot Password",
-                          style: TextStyle(fontSize: 17, color: Colors.white,letterSpacing: 3),
-                        )),
+                    flattyButton(
+                      onpressed:(){
+                        Navigator.pushNamedAndRemoveUntil(context,
+                            ForgotPassword.idscreen, (route) => false);
+                      } ,
+                      text: "Forgot Password",
+                      ),
 
                     SizedBox(
                       height: 20.0,
@@ -206,15 +174,16 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              FlatButton(
-                  onPressed: () {
+              flattyButton(
+                  onpressed: (){
                     Navigator.pushNamedAndRemoveUntil(context,
                         RegisterationScreen.idscreen, (route) => false);
+
                   },
-                  child: Text(
-                    "Do not have an Account ? Register Here",
-                    style: TextStyle(fontSize: 17, color: Colors.white),
-                  )),
+                  text: "Don't Have an Account ? Register Here"),
+
+
+
             ],
           ),
         ),
@@ -268,3 +237,7 @@ class LoginScreen extends StatelessWidget {
     }
   }
 }
+
+
+
+

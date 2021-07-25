@@ -26,7 +26,7 @@ class AssistantMethods {
     String placeAddress = "";
     String st1, st2, st3, st4;
     String url =
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=your key";
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=mapkey";
 
     var response = await RequestAssistant.getRequest(url);
 
@@ -59,7 +59,7 @@ class AssistantMethods {
   static Future<DirectionDetails> obtainDirectionDetails(
       LatLng initialPosition, LatLng finalPosition) async {
     String directionUrl =
-        "https://maps.googleapis.com/maps/api/directions/json?origin=${initialPosition.latitude},${initialPosition.longitude}&destination=${finalPosition.latitude},${finalPosition.longitude} &key=$mapKey";
+        "https://maps.googleapis.com/maps/api/directions/json?origin=your api key";
 
     var res = await RequestAssistant.getRequest(directionUrl);
 

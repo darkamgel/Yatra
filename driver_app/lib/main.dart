@@ -22,14 +22,15 @@ void main() async {
 }
 
 DatabaseReference usersRef =
-    FirebaseDatabase.instance.reference().child("users");
+      FirebaseDatabase.instance.reference().child("users");
 DatabaseReference driversRef =
       FirebaseDatabase.instance.reference().child("drivers");
+DatabaseReference newRequestsRef =
+      FirebaseDatabase.instance.reference().child("Ride Requests");
 DatabaseReference rideRequestRef =
       FirebaseDatabase.instance.reference().child("drivers")
           .child(currentfirebaseUser.uid).child("newRide");
-DatabaseReference newRequestsRef =
-         FirebaseDatabase.instance.reference().child("Ride Requests");
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

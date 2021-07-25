@@ -241,6 +241,7 @@ class _NewRideScreenState extends State<NewRideScreen> {
                                 widget.rideDetails.dropoff_address,
                                 style: TextStyle(fontSize: 18.0),
                                 overflow: TextOverflow.ellipsis,
+                              //  print("Hello world")
                               ),
                             ),
                           )

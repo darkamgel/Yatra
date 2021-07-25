@@ -5,6 +5,8 @@ import 'dart:async';
 
 
 
+import 'package:driver_app/AllScreens/carInfoScreen.dart';
+import 'package:driver_app/configMaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -343,7 +345,7 @@ class RegisterationScreen extends StatelessWidget {
     })
     )
         .user;
-     await _firebaseAuth.currentUser.sendEmailVerification();
+       await _firebaseAuth.currentUser.sendEmailVerification();
 
 
 
@@ -356,19 +358,14 @@ class RegisterationScreen extends StatelessWidget {
         "phone": phoneTextEditingController.text.trim(),
       };
 
-      usersRef.child(firebaseUser.uid).set(userDataMap);
+      driversRef.child(firebaseUser.uid).set(userDataMap);
+
+      currentfirebaseUser = firebaseUser;
 
 
-       // await firebaseUser.sendEmailVerification();
-
-
-
-
-       // if(user.emailVerified){
-         Navigator.pushNamedAndRemoveUntil(
-              context, MainScreen.idscreen, (route) => false);
+         Navigator.pushNamed(context, CarInfoScreen.idscreen);
        //
-         displayToastMessage("Welcome to Yatra. Book ride as you like", context);
+         displayToastMessage("Account created . Add Car details", context);
        //
        // }
 

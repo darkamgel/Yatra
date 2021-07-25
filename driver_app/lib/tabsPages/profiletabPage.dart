@@ -9,25 +9,30 @@ class ProfileTabPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Color(0xFFA2C5AC),
       body: SafeArea(
         child: Column(
+
+
+
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+
             Text(
               driversInformation.name.toUpperCase(),
               style: TextStyle(
                 fontSize: 65.0,
-                color: Colors.white,
+                color: Colors.red,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Signatra',
               ),
             ),
             Text(
-             title +  " driver",
+             title +  " Driver",
               style: TextStyle(
                 fontSize: 20.0,
-                color: Colors.blueGrey[200],
+                color: Colors.white,
                 letterSpacing: 2.5,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Brand-Regular'
@@ -60,47 +65,61 @@ class ProfileTabPage extends StatelessWidget {
               },
             ),
             InfoCard(
-              text: driversInformation.car_color + " " + driversInformation.car_model + " " + driversInformation.car_number,
+              text: driversInformation.car_color + " | " + driversInformation.car_model + " | " + driversInformation.car_number,
               icon: Icons.car_repair,
               onPressed: ()async{
                 print("this is Car");
               },
             ),
 
-            GestureDetector(
-
-              onTap: ()
-              {
-                Geofire.removeLocation(currentfirebaseUser.uid);
-                rideRequestRef.onDisconnect();
-                rideRequestRef.remove();
-                rideRequestRef = null;
-                
-                FirebaseAuth.instance.signOut();
-                Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idscreen, (route) => false);
+            SizedBox(height: 20,),
 
 
-              },
-              child: Card(
-                color: Colors.red,
-                margin: EdgeInsets.symmetric(vertical: 10.0,horizontal: 115.0),
-                child: ListTile(
-                  trailing: Icon(
-                    Icons.follow_the_signs_outlined,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    "Sign Out",
-                    textAlign:TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontFamily: 'Brand-Bold'
+
+
+
+            RaisedButton(
+                 color: Colors.grey[500].withOpacity(0.5),
+                textColor: Colors.white,
+                child: Container(
+                  height: 50.0,
+                  width: 150,
+                  child: Center(
+                    child: Text(
+                      "Sign Out",
+                      style: TextStyle(
+                        letterSpacing: 3,
+                        fontSize: 18.0,
+                        fontFamily: "Brand-Bold",
+
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(14.0),
+                ),
+                onPressed: () {
+                  Geofire.removeLocation(currentfirebaseUser.uid);
+                  rideRequestRef.onDisconnect();
+                  rideRequestRef.remove();
+                  rideRequestRef = null;
+
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idscreen, (route) => false);
+                }),
+
+
+
+
+
+
+
+
+
+
+
+
             
 
           ],
@@ -124,17 +143,17 @@ class InfoCard extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Card(
-        color: Colors.white,
+         color: Colors.grey[500].withOpacity(0.5),
         margin: EdgeInsets.symmetric(vertical: 10.0,horizontal: 25.0),
         child: ListTile(
           leading: Icon(
             icon,
-            color: Colors.black87,
+            color: Colors.white,
           ),
           title: Text(
             text,
             style: TextStyle(
-              color: Colors.black87,
+              color: Colors.white,
               fontSize: 16.0,
               fontFamily: 'Brand-Bold'
             ),

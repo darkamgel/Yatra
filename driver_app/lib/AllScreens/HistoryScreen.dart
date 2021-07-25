@@ -16,6 +16,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
       appBar: AppBar(
         title: Text('Trip History'),
+        centerTitle: true,
         backgroundColor: Colors.black87,
         leading: IconButton(
           onPressed: (){

@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
+import 'package:rider_app/AllScreens/mainscreen.dart';
 import 'package:rider_app/configMaps.dart';
 
 class ProfileTabPage extends StatelessWidget {
@@ -19,6 +20,13 @@ class ProfileTabPage extends StatelessWidget {
 
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Container(
+
+                height: 220,
+                child: Center(
+                  child: Image.asset('images/yatra_logo.png'),
+                ),
+              ),
 
               Text(
                 userCurrentInfo.name.toUpperCase(),
@@ -38,7 +46,7 @@ class ProfileTabPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 60.0,),
+              SizedBox(height: 20.0,),
 
               InfoCard(
                 text: userCurrentInfo.phone,
@@ -54,6 +62,24 @@ class ProfileTabPage extends StatelessWidget {
                 onPressed: () async {
                   print("this is email.");
                 },
+              ),
+
+              FlatButton(
+                onPressed: (){
+                  Navigator.pushNamedAndRemoveUntil(context, MainScreen.idscreen, (route) => false);
+                },
+
+                child:Text(
+                  'Go back',style: TextStyle(fontSize: 18,color: Colors.white),
+
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)
+                ),
+
+
+
+
               ),
 
             ],

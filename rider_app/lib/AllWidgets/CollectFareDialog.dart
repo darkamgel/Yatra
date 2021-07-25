@@ -57,6 +57,8 @@ class CollectFareDialog extends StatelessWidget {
 
 
 
+
+
                   },
                 color: Colors.green,
                 child: Padding(

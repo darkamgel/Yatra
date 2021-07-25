@@ -1,6 +1,6 @@
+
 import 'package:driver_app/Models/history.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:driver_app/Models/address.dart';
 
 
 class AppData extends ChangeNotifier
@@ -10,30 +10,28 @@ class AppData extends ChangeNotifier
   List<String> tripHistoryKeys = [];
   List<History> tripHistoryDataList = [];
 
+
   void updateEarnings(String updatedEarnings)
   {
     earnings = updatedEarnings;
     notifyListeners();
   }
+
   void updateTripsCounter(int tripCounter)
   {
-    countTrips  = tripCounter;
+    countTrips = tripCounter;
     notifyListeners();
   }
+
   void updateTripKeys(List<String> newKeys)
   {
-    tripHistoryKeys  = newKeys;
+    tripHistoryKeys = newKeys;
     notifyListeners();
   }
 
-  void updateTripHistoryData(History eachhistory)
+  void updateTripHistoryData(History eachHistory)
   {
-    tripHistoryDataList.add(eachhistory);
+    tripHistoryDataList.add(eachHistory);
     notifyListeners();
   }
-
-
-
-
 }
-

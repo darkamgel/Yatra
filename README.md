@@ -4,8 +4,11 @@ This is 5th sem project based on Flutter and firestore database. It is a simple 
 
 Packages used :
   firebase_core:
+  
   firebase_auth:
+  
   firebase_database:
+  
   fluttertoast:
   google_maps_flutter:
   geolocator:

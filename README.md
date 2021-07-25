@@ -4,46 +4,43 @@ This is 5th sem project based on Flutter and firestore database. It is a simple 
 Requirement:
 
   Flutter: <=2.0
-  
   Dart:<=2.10.5
 
 
 Packages used :
-  firebase_core:
+     firebase_core:
   
-  firebase_auth:
+    firebase_auth:
+    firebase_database:
   
-  firebase_database:
+    fluttertoast:
   
-  fluttertoast:
+    google_maps_flutter:
   
-  google_maps_flutter:
+     geolocator:
   
-  geolocator:
+    geocoding:
   
-  geocoding:
+    http:
   
-  http:
+    provider:
   
-  provider:
+    email_auth:
   
-  email_auth:
+    animated_text_kit:
   
-  animated_text_kit:
+    flutter_polyline_points:
   
-  flutter_polyline_points:
+    font_awesome_flutter:
   
-  font_awesome_flutter:
+    flutter_geofire:
   
-  flutter_geofire:
+    smooth_star_rating:
   
-  smooth_star_rating:
+    firebase_storage:
   
-  firebase_storage:
-  
-  intl:
+    intl:
   
   You will need a billing account for using Geofire . insert Api key from the google map api to the places where "Your Api" you need to add your own database file i.e json file
-  
   Demo images of this project is inside the Demoimages file.
   

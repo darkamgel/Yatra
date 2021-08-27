@@ -1,5 +1,5 @@
 # Yatra
-This is 5th sem project based on Flutter and firestore database. It is a simple rider sharing app .
+A simple project based on Flutter and firestore database. It is a simple rider sharing app .
 
 Requirement:
     Flutter: <=2.0
